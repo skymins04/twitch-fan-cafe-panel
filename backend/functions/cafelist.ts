@@ -21,7 +21,7 @@ const MAX_BOARD_NUM = 5;
  * @returns
  *
  * JSON.parse(event.body as string): {
- *  boards: {title: string, url: string}[]
+ *  boards: {title: string, url: string, skipNotice: boolean}[]
  * }
  */
 
@@ -33,7 +33,11 @@ const handler: Handler = async (event, context) => {
   if (!(boards instanceof Array) || boards.length === 0) return failResponse;
   for (const { idx, board } of boards.map((board, idx) => ({ idx, board }))) {
     if (idx === MAX_BOARD_NUM) break;
-    else if (typeof board.title !== "string" && typeof board.url !== "string")
+    else if (
+      typeof board.title !== "string" ||
+      typeof board.url !== "string" ||
+      typeof board.skipNotice !== "boolean"
+    )
       return failResponse;
     else if (
       !board.url.match(
@@ -46,14 +50,19 @@ const handler: Handler = async (event, context) => {
   // 각 URL 별 네이버카페 글목록 데이터 파싱
 
   const data = [];
-  for (const { title, url } of boards) {
+  for (const { title, url, skipNotice } of boards) {
     const $content = $.load(
       await axios
         .default({ url, method: "GET", responseType: "arraybuffer" })
         .then((res) => iconv.decode(res.data, "EUC-KR"))
     );
 
-    const $articleList = $content("div.inner_list a.article");
+    const skipNoticeSelector =
+      "div.article-board:not(#upperArticleList) div.inner_list a.article";
+    const allSelector = "div.inner_list a.article";
+    const $articleList = $content(
+      skipNotice ? skipNoticeSelector : allSelector
+    );
     const articles: { title: string; url: string }[] = [];
     $articleList.each((idx, ele) => {
       articles.push({
