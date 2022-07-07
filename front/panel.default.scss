@@ -1,0 +1,192 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --header-height: 60px;
+  --banner-height: 55px;
+  --global-padding-1: 20px;
+  --global-padding-2: 10px;
+  --primary-color-1: #17ce5f;
+  --gray-color-1: #f8f8f8;
+  --gray-color-2: #efefef;
+  --gray-color-3: #dfdfdf;
+}
+
+html,
+body,
+.main {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: white;
+}
+
+.main {
+  .header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    height: var(--header-height);
+    padding: var(--global-padding-1);
+    background-color: var(--primary-color-1);
+
+    .header-title {
+      color: white;
+      font-size: 24px;
+      font-weight: bolder;
+    }
+  }
+
+  .article {
+    position: relative;
+    width: 100%;
+    height: calc(100% - var(--header-height));
+    padding: var(--global-padding-1);
+
+    .screen-saver {
+      // display: flex;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      padding: var(--global-padding-1);
+      background-color: blue;
+      z-index: 1000;
+    }
+    #loading-screen-saver {
+      display: flex;
+    }
+
+    .tab-viewport {
+      position: relative;
+      width: 100%;
+      height: calc(100% - var(--banner-height));
+
+      .tab-btns {
+        position: relative;
+        display: flex;
+        height: max-content;
+        justify-content: space-between;
+        align-items: center;
+
+        .tab-btn {
+          position: relative;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100%;
+          padding: var(--global-padding-2);
+          word-break: keep-all;
+          text-align: center;
+          border-radius: 10px 10px 0 0;
+          font-size: 12px;
+          background-color: var(--gray-color-2);
+          transition: 0.2s;
+        }
+        .tab-btn:hover {
+          cursor: pointer;
+          background-color: var(--gray-color-3);
+        }
+        .tab-btn.selected {
+          background-color: var(--primary-color-1);
+          color: white;
+        }
+      }
+
+      .tab-contents {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        padding: 0.5em 0;
+        border-left: 1px solid var(--gray-color-2);
+        border-right: 1px solid var(--gray-color-2);
+        border-bottom: 1px solid var(--gray-color-2);
+        overflow-x: hidden;
+        overflow-y: auto;
+
+        .tab-content {
+          padding: 0;
+          margin: 0;
+
+          .item {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            position: relative;
+            list-style: none;
+            font-size: 14px;
+            margin: 0 0.5em;
+            padding: 0.6em 0.5em 0.5em 2em;
+            border-bottom: 1px solid var(--gray-color-1);
+            background-color: white;
+            transition: 0.2s;
+            word-break: keep-all;
+          }
+
+          .item:hover {
+            cursor: pointer;
+            background-color: var(--gray-color-2);
+          }
+
+          .item::before {
+            content: "👉";
+            position: absolute;
+            top: 0.45em;
+            left: 0.7em;
+            display: block;
+          }
+        }
+      }
+    }
+
+    .banner-viewport {
+      position: relative;
+      width: 100%;
+      height: var(--banner-height);
+      background-color: #f6f9fa;
+      border-left: 1px solid var(--gray-color-2);
+      border-right: 1px solid var(--gray-color-2);
+      border-bottom: 1px solid var(--gray-color-2);
+
+      #slider {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+
+        .item {
+          position: relative;
+          height: 100%;
+          background-size: 100% 100%;
+          background-position: center center;
+          background-repeat: no-repeat;
+        }
+      }
+    }
+  }
+}
+
+.main.no-banner {
+  .article {
+    .tab-viewport {
+      height: 100%;
+    }
+
+    .banner-viewport {
+      display: none;
+    }
+  }
+}

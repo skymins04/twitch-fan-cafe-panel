@@ -1,0 +1,231 @@
+@charset "UTF-8";
+* {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+:root {
+  --header-height: 60px;
+  --banner-height: 55px;
+  --global-padding-1: 20px;
+  --global-padding-2: 10px;
+  --primary-color-1: #17ce5f;
+  --gray-color-1: #f8f8f8;
+  --gray-color-2: #efefef;
+  --gray-color-3: #dfdfdf;
+}
+
+html,
+body,
+.main {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: white;
+}
+
+.main .header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  position: relative;
+  width: 100%;
+  height: var(--header-height);
+  padding: var(--global-padding-1);
+  background-color: var(--primary-color-1);
+}
+
+.main .header .header-title {
+  color: white;
+  font-size: 24px;
+  font-weight: bolder;
+}
+
+.main .article {
+  position: relative;
+  width: 100%;
+  height: calc(100% - var(--header-height));
+  padding: var(--global-padding-1);
+}
+
+.main .article .screen-saver {
+  display: none;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 5px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: var(--global-padding-1);
+  background-color: blue;
+  z-index: 1000;
+}
+
+.main .article #loading-screen-saver {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.main .article .tab-viewport {
+  position: relative;
+  width: 100%;
+  height: calc(100% - var(--banner-height));
+}
+
+.main .article .tab-viewport .tab-btns {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  height: -webkit-max-content;
+  height: -moz-max-content;
+  height: max-content;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.main .article .tab-viewport .tab-btns .tab-btn {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  height: 100%;
+  padding: var(--global-padding-2);
+  word-break: keep-all;
+  text-align: center;
+  border-radius: 10px 10px 0 0;
+  font-size: 12px;
+  background-color: var(--gray-color-2);
+  -webkit-transition: 0.2s;
+  transition: 0.2s;
+}
+
+.main .article .tab-viewport .tab-btns .tab-btn:hover {
+  cursor: pointer;
+  background-color: var(--gray-color-3);
+}
+
+.main .article .tab-viewport .tab-btns .tab-btn.selected {
+  background-color: var(--primary-color-1);
+  color: white;
+}
+
+.main .article .tab-viewport .tab-contents {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 0.5em 0;
+  border-left: 1px solid var(--gray-color-2);
+  border-right: 1px solid var(--gray-color-2);
+  border-bottom: 1px solid var(--gray-color-2);
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.main .article .tab-viewport .tab-contents .tab-content {
+  padding: 0;
+  margin: 0;
+}
+
+.main .article .tab-viewport .tab-contents .tab-content .item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  position: relative;
+  list-style: none;
+  font-size: 14px;
+  margin: 0 0.5em;
+  padding: 0.6em 0.5em 0.5em 2em;
+  border-bottom: 1px solid var(--gray-color-1);
+  background-color: white;
+  -webkit-transition: 0.2s;
+  transition: 0.2s;
+  word-break: keep-all;
+}
+
+.main .article .tab-viewport .tab-contents .tab-content .item:hover {
+  cursor: pointer;
+  background-color: var(--gray-color-2);
+}
+
+.main .article .tab-viewport .tab-contents .tab-content .item::before {
+  content: "👉";
+  position: absolute;
+  top: 0.45em;
+  left: 0.7em;
+  display: block;
+}
+
+.main .article .banner-viewport {
+  position: relative;
+  width: 100%;
+  height: var(--banner-height);
+  background-color: #f6f9fa;
+  border-left: 1px solid var(--gray-color-2);
+  border-right: 1px solid var(--gray-color-2);
+  border-bottom: 1px solid var(--gray-color-2);
+}
+
+.main .article .banner-viewport #slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.main .article .banner-viewport #slider .item {
+  position: relative;
+  height: 100%;
+  background-size: 100% 100%;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+.main.no-banner .article .tab-viewport {
+  height: 100%;
+}
+
+.main.no-banner .article .banner-viewport {
+  display: none;
+}
+/*# sourceMappingURL=panel.default.css.map */

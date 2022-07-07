@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "",
+    "sources": [
+        "panel.custom.scss"
+    ],
+    "names": [],
+    "file": "panel.custom.css"
+}
