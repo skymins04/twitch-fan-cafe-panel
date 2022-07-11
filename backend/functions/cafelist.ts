@@ -30,6 +30,7 @@ const handler: Handler = async (event, context) => {
 
   // URL 유효성 검사
   const { boards } = JSON.parse(event.body);
+
   if (!(boards instanceof Array) || boards.length === 0) return failResponse;
   for (const { idx, board } of boards.map((board, idx) => ({ idx, board }))) {
     if (idx === MAX_BOARD_NUM) break;
@@ -41,7 +42,7 @@ const handler: Handler = async (event, context) => {
       return failResponse;
     else if (
       !board.url.match(
-        /^https:\/\/cafe\.naver\.com\/ArticleList\.nhn\?search\.clubid=[0-9]+&search\.menuid=[0-9]+&userDisplay=[0-9]+&search\.boardtype=L&search\.totalCount=[0-9]+&search.cafeId=[0-9]+&search.page=1$/
+        /^https:\/\/cafe\.naver\.com\/ArticleList\.nhn\?search\.clubid=[0-9]+&search\.menuid=[0-9]+&userDisplay=[0-9]+&search\.boardtype=L&search.cafeId=[0-9]+&search.page=1$/
       )
     )
       return failResponse;
