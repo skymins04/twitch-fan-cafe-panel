@@ -1,4 +1,4 @@
-let bannerNum;
+var bannerNum;
 const PROD_API_URL = ``;
 const DEV_API_URL = `http://localhost:8888/api/cafelist`;
 /*
@@ -125,7 +125,7 @@ function startBannerSlide() {
  */
 function getCafeListReqParam() {
   return {
-    boards: options.banners.map((x) => {
+    boards: options.tabs.map((x) => {
       let userDisplay = x.userDisplay;
       switch (userDisplay) {
         case 5:
@@ -150,11 +150,12 @@ function getCafeListReqParam() {
 }
 
 function getCafeList() {
+  console.log(getCafeListReqParam());
   $.ajax({
     type: "POST",
     url: DEV_API_URL,
-    data: getCafeListReqParam(),
-    dataType: "json",
+    data: JSON.stringify(getCafeListReqParam()),
+    dataType: "text",
   }).then((res) => {
     console.log(res);
   });

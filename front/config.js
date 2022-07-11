@@ -1,4 +1,4 @@
-var bannerNum = 0;
+let bannerNum = 0;
 
 function createToastInfo(msg) {
   const toast = $(`<div class="toast-info">${msg}</div>`);
