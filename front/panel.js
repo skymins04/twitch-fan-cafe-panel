@@ -1,22 +1,14 @@
 var bannerNum;
 const PROD_API_URL = ``;
 const DEV_API_URL = `http://localhost:8888/api/cafelist`;
-/*
-
-https://cafe.naver.com/ArticleList.nhn?search.clubid=30754208&search.menuid=24&userDisplay=30&search.boardtype=L&search.totalCount=1&search.cafeId=30754208&search.page=1
-
-title
-cafeId
-menuId
-userDisplay
-skipNotice
-
-*/
 
 /**
  * Twitch Configuration 로드 완료시 실행되는 함수
  */
 function updateOptions() {
+  $("#loading-screen-saver .text").html(options.loadingScreenSaverText);
+  $(".header-title:first").html(options.pannelTitle);
+
   console.log(options);
   if (options.banners.length === 0) {
     bannerNum = 0;
@@ -24,7 +16,6 @@ function updateOptions() {
   } else {
     const { banners } = options;
     for (const url of banners) {
-      console.log("hahaha", url);
       const banner = $(`<div></div>`);
       banner.addClass("item");
       banner.css("background-image", `url(${url})`);
@@ -38,19 +29,20 @@ function updateOptions() {
 
   if (
     options.tabs.length === 0 ||
-    options.cafeId === "" ||
-    !options.cafeId.match(/^[0-9]+$/)
+    options.cafeId.naverCafe.trim() === "" ||
+    !options.cafeId.naverCafe.match(/^[0-9]+$/)
   ) {
     $(".main").addClass("no-tab");
-    $("#failed-screen-saver").html("설정된 글목록이 없습니다.");
+    showFailedScreenSaver("설정된 글목록이 없습니다.");
   } else {
   }
 
   initClipboardJS(() => {
     createToast(options.toastMsgLinkCopy);
   });
-  getCafeList();
-  setTimeout(UIinit, 100);
+  getCafeList(() => {
+    setTimeout(UIinit, 100);
+  });
 }
 
 /**
@@ -69,8 +61,6 @@ function UIinit() {
   const tabContentsHeight = $(".tab-contents:first").height();
   $(".tab-contents").height(tabContentsHeight - tabBtnsHeight);
   $(".tab-btn").height(tabBtnsHeight - globalPadding2 * 2);
-
-  $(".header-title:first").html(options.pannelTitle);
 
   $("#loading-screen-saver").hide();
 }
@@ -121,42 +111,78 @@ function startBannerSlide() {
 }
 
 /**
- * 게시판 글목록 링크를 생성하는 함수
+ * 실패화면을 띄우는 함수
+ * @param {string} msg
  */
-function getCafeListReqParam() {
-  return {
-    boards: options.tabs.map((x) => {
-      let userDisplay = x.userDisplay;
-      switch (userDisplay) {
-        case 5:
-        case 10:
-        case 15:
-        case 20:
-        case 30:
-        case 40:
-        case 50:
-          break;
-        default:
-          userDisplay = 15;
-          break;
-      }
-      return {
-        title: x.title,
-        url: `https://cafe.naver.com/ArticleList.nhn?search.clubid=${options.cafeId}&search.menuid=${x.menuId}&userDisplay=${userDisplay}&search.boardtype=L&search.cafeId=${options.cafeId}&search.page=1`,
-        skipNotice: x.skipNotice,
-      };
-    }),
-  };
+function showFailedScreenSaver(msg) {
+  $("#failed-screen-saver").html(msg);
+  $("#loading-screen-saver").hide();
 }
 
-function getCafeList() {
-  console.log(getCafeListReqParam());
-  $.ajax({
-    type: "POST",
-    url: DEV_API_URL,
-    data: JSON.stringify(getCafeListReqParam()),
-    dataType: "text",
-  }).then((res) => {
-    console.log(res);
-  });
+/**
+ * 게시판 글목록을 가져오고 탭을 생성하는 함수
+ * @param {() => void} callback
+ */
+function getCafeList(callback) {
+  const reqParam = {
+    cafeId: options.cafeId,
+    boards: options.tabs,
+  };
+  if (reqParam.boards.length === 0) {
+    $(".main").addClass("no-tab");
+    showFailedScreenSaver(options.failedScreenSaverText);
+  } else {
+    $.ajax({
+      type: "POST",
+      url: DEV_API_URL,
+      data: JSON.stringify(reqParam),
+      dataType: "text",
+    })
+      .then((res) => {
+        const { data } = JSON.parse(res);
+        $(".tab-btns").empty();
+        $(".tab-contents").empty();
+        data.forEach((itm, i) => {
+          const tabBtn = $("<div></div>");
+          tabBtn.addClass("tab-btn");
+          tabBtn.addClass(itm.type);
+          if (i === 0) tabBtn.addClass("selected");
+          tabBtn.attr("data-tab-no", i);
+          tabBtn.html(itm.title);
+
+          const tabContent = $("<ul></ul>");
+          tabContent.addClass("tab-content");
+          tabContent.addClass(itm.type);
+          tabContent.attr("data-tab-no", i);
+
+          itm.articles.forEach((article, j) => {
+            const noticeTag = article.isNotice
+              ? `<span class="notice">공지</span>`
+              : "";
+            const tabContentItem = $("<li></li>");
+            const tabContentItemTitle = $(
+              `<span class="title">${noticeTag}<span class="idx">${
+                j + 1
+              }</span><span class="dot">.</span>${article.title}</span>`
+            );
+            tabContentItem.append(tabContentItemTitle);
+            tabContentItem.attr("data-clipboard-text", article.url);
+            tabContentItem.addClass("item");
+            if (article.isNotice) tabContentItem.addClass("item-notice");
+            tabContent.append(tabContentItem);
+          });
+
+          $(".tab-btns").append(tabBtn);
+          $(".tab-contents").append(tabContent);
+        });
+
+        $(".tab-content:first").show();
+
+        callback();
+      })
+      .catch((e) => {
+        $(".main").addClass("no-tab");
+        showFailedScreenSaver(options.failedScreenSaverText);
+      });
+  }
 }

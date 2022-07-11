@@ -1,6 +1,8 @@
 let token, userId, options;
 const defaultPannelTitle = "NaverCafe 트위치 패널";
 const defaultToastMsgLinkCopy = "복사되었습니다!";
+const defaultFailedScreenSaverText = "글목록을 불러올 수 없습니다.";
+const defaultLoadingScreenSaverText = "글목록 로딩중";
 const defaultBannerSlideInterval = 4000;
 
 const twitch = window.Twitch.ext;
@@ -15,7 +17,10 @@ twitch.configuration.onChanged(function () {
       const config = JSON.parse(twitch.configuration.broadcaster.content);
       options = config;
 
-      if (!options.cafeId) options.cafeId = "";
+      if (!options.cafeId)
+        options.cafeId = {
+          naverCafe: "",
+        };
 
       if (!options.banners) options.banners = [];
 
@@ -34,6 +39,16 @@ twitch.configuration.onChanged(function () {
         options.bannerSlideInterval = defaultBannerSlideInterval;
       else if (options.bannerSlideInterval < 1000)
         options.bannerSlideInterval = 1000;
+
+      if (!options.loadingScreenSaverText)
+        options.loadingScreenSaverText = defaultLoadingScreenSaverText;
+      else if (options.loadingScreenSaverText.trim() === "")
+        options.loadingScreenSaverText = defaultLoadingScreenSaverText;
+
+      if (!options.failedScreenSaverText)
+        options.failedScreenSaverText = defaultFailedScreenSaverText;
+      else if (options.failedScreenSaverText.trim() === "")
+        options.failedScreenSaverText = defaultFailedScreenSaverText;
     } catch (e) {
       console.log("invalid config");
       setDefaultSetting();
@@ -44,11 +59,15 @@ twitch.configuration.onChanged(function () {
 
 function setDefaultSetting() {
   options = {
-    cafeId: "",
+    cafeId: {
+      naverCafe: "",
+    },
     banners: [],
     tabs: [],
     pannelTitle: defaultPannelTitle,
     toastMsgLinkCopy: defaultToastMsgLinkCopy,
     bannerSlideInterval: defaultBannerSlideInterval,
+    loadingScreenSaverText: defaultLoadingScreenSaverText,
+    failedScreenSaverText: defaultFailedScreenSaverText,
   };
 }
