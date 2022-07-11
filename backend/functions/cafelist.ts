@@ -58,14 +58,15 @@ const handler: Handler = async (event, context) => {
         .then((res) => iconv.decode(res.data, "EUC-KR"))
     );
 
-    const skipNoticeSelector =
-      "div.article-board:not(#upperArticleList) div.inner_list a.article";
-    const allSelector = "div.inner_list a.article";
-    const $articleList = $content(
-      skipNotice ? skipNoticeSelector : allSelector
+    const $noticeArticleList = $content(
+      "div.article-board div.inner_list a.article"
     );
-    const articles: { title: string; url: string }[] = [];
-    $articleList.each((idx, ele) => {
+    const $normalArticleList = $content(
+      "div.article-board:not(#upperArticleList) div.inner_list a.article"
+    );
+
+    const articles: { title: string; url: string; isNotice: boolean }[] = [];
+    $noticeArticleList.each((idx, ele) => {
       articles.push({
         title: $content(ele)
           .text()
@@ -73,6 +74,18 @@ const handler: Handler = async (event, context) => {
           .trim()
           .replace(/ +/g, " "),
         url: `https://cafe.naver.com${$content(ele).attr("href")}`,
+        isNotice: true,
+      });
+    });
+    $normalArticleList.each((idx, ele) => {
+      articles.push({
+        title: $content(ele)
+          .text()
+          .replace(/(\n|\t)/g, "")
+          .trim()
+          .replace(/ +/g, " "),
+        url: `https://cafe.naver.com${$content(ele).attr("href")}`,
+        isNotice: false,
       });
     });
     data.push({
