@@ -1,5 +1,6 @@
 let bannerNum;
-
+const PROD_API_URL = ``;
+const DEV_API_URL = `http://localhost:8888/api/cafelist`;
 /*
 
 https://cafe.naver.com/ArticleList.nhn?search.clubid=30754208&search.menuid=24&userDisplay=30&search.boardtype=L&search.totalCount=1&search.cafeId=30754208&search.page=1
@@ -35,7 +36,11 @@ function updateOptions() {
     startBannerSlide();
   }
 
-  if (options.tabs.length === 0) {
+  if (
+    options.tabs.length === 0 ||
+    options.cafeId === "" ||
+    !options.cafeId.match(/^[0-9]+$/)
+  ) {
     $(".main").addClass("no-tab");
     $("#failed-screen-saver").html("설정된 글목록이 없습니다.");
   } else {
@@ -44,6 +49,7 @@ function updateOptions() {
   initClipboardJS(() => {
     createToast(options.toastMsgLinkCopy);
   });
+  getCafeList();
   setTimeout(UIinit, 100);
 }
 
@@ -95,6 +101,9 @@ function createToast(msg) {
   }, 5500);
 }
 
+/**
+ * 배너의 슬라이드쇼를 실행하는 함수
+ */
 function startBannerSlide() {
   if (bannerNum !== 0) {
     let sliderNum = 0;
@@ -109,4 +118,44 @@ function startBannerSlide() {
     }, options.bannerSlideInterval);
     $(".banner-viewport").show();
   }
+}
+
+/**
+ * 게시판 글목록 링크를 생성하는 함수
+ */
+function getCafeListReqParam() {
+  return {
+    boards: options.banners.map((x) => {
+      let userDisplay = x.userDisplay;
+      switch (userDisplay) {
+        case 5:
+        case 10:
+        case 15:
+        case 20:
+        case 30:
+        case 40:
+        case 50:
+          break;
+        default:
+          userDisplay = 15;
+          break;
+      }
+      return {
+        title: x.title,
+        url: `https://cafe.naver.com/ArticleList.nhn?search.clubid=${options.cafeId}&search.menuid=${x.menuId}&userDisplay=${userDisplay}&search.boardtype=L&search.cafeId=${options.cafeId}&search.page=1`,
+        skipNotice: x.skipNotice,
+      };
+    }),
+  };
+}
+
+function getCafeList() {
+  $.ajax({
+    type: "POST",
+    url: DEV_API_URL,
+    data: getCafeListReqParam(),
+    dataType: "json",
+  }).then((res) => {
+    console.log(res);
+  });
 }

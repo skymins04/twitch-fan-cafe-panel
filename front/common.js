@@ -15,6 +15,8 @@ twitch.configuration.onChanged(function () {
       const config = JSON.parse(twitch.configuration.broadcaster.content);
       options = config;
 
+      if (!options.cafeId) options.cafeId = "";
+
       if (!options.banners) options.banners = [];
 
       if (!options.tabs) options.tabs = [];
@@ -42,6 +44,7 @@ twitch.configuration.onChanged(function () {
 
 function setDefaultSetting() {
   options = {
+    cafeId: "",
     banners: [],
     tabs: [],
     pannelTitle: defaultPannelTitle,
