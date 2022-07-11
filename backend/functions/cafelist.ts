@@ -66,17 +66,19 @@ const handler: Handler = async (event, context) => {
     );
 
     const articles: { title: string; url: string; isNotice: boolean }[] = [];
-    $noticeArticleList.each((idx, ele) => {
-      articles.push({
-        title: $content(ele)
-          .text()
-          .replace(/(\n|\t)/g, "")
-          .trim()
-          .replace(/ +/g, " "),
-        url: `https://cafe.naver.com${$content(ele).attr("href")}`,
-        isNotice: true,
+    if (!skipNotice) {
+      $noticeArticleList.each((idx, ele) => {
+        articles.push({
+          title: $content(ele)
+            .text()
+            .replace(/(\n|\t)/g, "")
+            .trim()
+            .replace(/ +/g, " "),
+          url: `https://cafe.naver.com${$content(ele).attr("href")}`,
+          isNotice: true,
+        });
       });
-    });
+    }
     $normalArticleList.each((idx, ele) => {
       articles.push({
         title: $content(ele)
@@ -91,6 +93,7 @@ const handler: Handler = async (event, context) => {
     data.push({
       title,
       articles,
+      type: "naver-cafe",
     });
   }
 
