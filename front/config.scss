@@ -3,15 +3,12 @@
 }
 
 :root {
-  --nav-width: 200px;
 }
 
 html,
-body,
-.main {
+body {
   position: relative;
   width: 100%;
-  min-width: 800px;
   height: 100%;
   margin: 0;
   padding: 0;
@@ -23,11 +20,6 @@ body,
   user-select: none;
 }
 
-.main {
-  .nav {
-    position: relative;
-    width: var(--nav-width);
-    height: 100%;
-    background-color: navy;
-  }
+.nav-link:not(.active):hover {
+  background-color: #191d21 !important;
 }
