@@ -1,5 +1,9 @@
-let token, userId, options;
-const defaultPannelTitle = "NaverCafe 트위치 패널";
+let token, userId, options, bannerNum;
+
+const PROD_API_URL = ``;
+const DEV_API_URL = `http://localhost:8888/api/cafelist`;
+
+const defaultPannelTitle = "팬카페 트위치 패널";
 const defaultToastMsgLinkCopy = "복사되었습니다!";
 const defaultFailedScreenSaverText = "글목록을 불러올 수 없습니다.";
 const defaultLoadingScreenSaverText = "글목록 로딩중";
@@ -16,6 +20,8 @@ twitch.configuration.onChanged(function () {
     try {
       const config = JSON.parse(twitch.configuration.broadcaster.content);
       options = config;
+
+      if (!options.mode) options.mode = "prod";
 
       if (!options.cafeId)
         options.cafeId = {
@@ -59,6 +65,7 @@ twitch.configuration.onChanged(function () {
 
 function setDefaultSetting() {
   options = {
+    mode: "prod",
     cafeId: {
       naverCafe: "",
     },

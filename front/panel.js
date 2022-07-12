@@ -1,7 +1,3 @@
-var bannerNum;
-const PROD_API_URL = ``;
-const DEV_API_URL = `http://localhost:8888/api/cafelist`;
-
 /**
  * Twitch Configuration 로드 완료시 실행되는 함수
  */
@@ -134,7 +130,12 @@ function getCafeList(callback) {
   } else {
     $.ajax({
       type: "POST",
-      url: DEV_API_URL,
+      url:
+        options.mode === "prod"
+          ? PROD_API_URL
+          : options.mode === "dev"
+          ? DEV_API_URL
+          : "",
       data: JSON.stringify(reqParam),
       dataType: "text",
     })

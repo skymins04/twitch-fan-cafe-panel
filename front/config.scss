@@ -1,6 +1,5 @@
 * {
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 :root {
@@ -24,10 +23,11 @@ body,
   user-select: none;
 }
 
-.main .nav {
-  position: relative;
-  width: var(--nav-width);
-  height: 100%;
-  background-color: navy;
+.main {
+  .nav {
+    position: relative;
+    width: var(--nav-width);
+    height: 100%;
+    background-color: navy;
+  }
 }
-/*# sourceMappingURL=config.css.map */
