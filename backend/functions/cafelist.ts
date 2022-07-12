@@ -12,7 +12,75 @@ const failResponse = {
 };
 
 // 최대 동시 파싱 글목록 수
-const MAX_BOARD_NUM = 5;
+const MAX_BOARD_NUM = 4;
+
+/**
+ * 네이버카페 글목록을 파싱하여 Response로 전달하는 핸들러
+ * @param event
+ * @param context
+ * @returns
+ *
+ * JSON.parse(event.body as string): {
+ *  boards: {title: string, menuId: string, type: 'naver-cafe', count: number, skipNotice: boolean}[]
+ * }
+ */
+
+const handler: Handler = async (event, context) => {
+  if (event.body === null) return failResponse;
+
+  // URL 유효성 검사
+  const { cafeId, boards } = JSON.parse(event.body);
+  const checkedBoards = [];
+
+  if (!(boards instanceof Array) || boards.length === 0) return failResponse;
+  for (const { idx, board } of boards.map((board, idx) => ({ idx, board }))) {
+    if (idx === MAX_BOARD_NUM) break;
+    else if (
+      typeof board.title !== "string" ||
+      typeof board.menuId !== "string" ||
+      typeof board.count !== "number" ||
+      typeof board.type !== "string" ||
+      typeof board.skipNotice !== "boolean"
+    )
+      return failResponse;
+    checkedBoards.push(board);
+  }
+
+  // 각 URL 별 네이버카페 글목록 데이터 파싱
+
+  const data = [];
+  for (const { title, menuId, count, type, skipNotice } of checkedBoards) {
+    let c = count;
+    switch (count) {
+      case 5:
+      case 10:
+      case 15:
+      case 20:
+      case 30:
+      case 40:
+      case 50:
+        break;
+      default:
+        c = 15;
+        break;
+    }
+    switch (type) {
+      case "naver-cafe":
+        data.push(
+          await parseNaverCafe(cafeId.naverCafe, title, menuId, c, skipNotice)
+        );
+        break;
+    }
+  }
+
+  return {
+    statusCode: 200,
+    headers: defaultHeader,
+    body: JSON.stringify({
+      data,
+    }),
+  };
+};
 
 /**
  * 네이버카페 글목록 파싱 함수
@@ -73,74 +141,6 @@ const parseNaverCafe = async (
     title,
     articles,
     type: "naver-cafe",
-  };
-};
-
-/**
- * 네이버카페 글목록을 파싱하여 Response로 전달하는 핸들러
- * @param event
- * @param context
- * @returns
- *
- * JSON.parse(event.body as string): {
- *  boards: {title: string, url: string, skipNotice: boolean}[]
- * }
- */
-
-const handler: Handler = async (event, context) => {
-  if (event.body === null) return failResponse;
-
-  // URL 유효성 검사
-  const { cafeId, boards } = JSON.parse(event.body);
-  const checkedBoards = [];
-
-  if (!(boards instanceof Array) || boards.length === 0) return failResponse;
-  for (const { idx, board } of boards.map((board, idx) => ({ idx, board }))) {
-    if (idx === MAX_BOARD_NUM) break;
-    else if (
-      typeof board.title !== "string" ||
-      typeof board.menuId !== "string" ||
-      typeof board.count !== "number" ||
-      typeof board.type !== "string" ||
-      typeof board.skipNotice !== "boolean"
-    )
-      return failResponse;
-    checkedBoards.push(board);
-  }
-
-  // 각 URL 별 네이버카페 글목록 데이터 파싱
-
-  const data = [];
-  for (const { title, menuId, count, type, skipNotice } of checkedBoards) {
-    let c = count;
-    switch (count) {
-      case 5:
-      case 10:
-      case 15:
-      case 20:
-      case 30:
-      case 40:
-      case 50:
-        break;
-      default:
-        c = 15;
-        break;
-    }
-    switch (type) {
-      case "naver-cafe":
-        data.push(
-          await parseNaverCafe(cafeId.naverCafe, title, menuId, c, skipNotice)
-        );
-        break;
-    }
-  }
-
-  return {
-    statusCode: 200,
-    headers: defaultHeader,
-    body: JSON.stringify({
-      data,
-    }),
   };
 };
 
