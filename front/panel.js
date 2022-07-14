@@ -130,12 +130,7 @@ function getCafeList(callback) {
   } else {
     $.ajax({
       type: "POST",
-      url:
-        options.mode === "prod"
-          ? PROD_API_URL
-          : options.mode === "dev"
-          ? DEV_API_URL
-          : "",
+      url: options.apiURL,
       data: JSON.stringify(reqParam),
       dataType: "text",
     })

@@ -17,20 +17,14 @@
   </head>
   <body class="row m-0">
     <nav
-      class="d-flex flex-column flex-shrink-0 h-100 p-3 text-white bg-dark col-lg-2"
+      class="d-flex flex-column flex-shrink-0 h-100 p-3 text-white bg-dark col-5 col-sm-4 col-md-3 col-lg-2"
     >
       <a
         href="#"
-        class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none"
+        class="d-flex align-items-center mb-md-0 me-md-auto text-white text-decoration-none"
       >
-        <img
-          src="./twitch-logo.png"
-          class="bi me-2"
-          width="40"
-          height="40"
-          style="margin-right: 20px !important"
-        />
-        <span class="fs-6">트위치<br />팬카페 패널</span>
+        <img src="./twitch-logo.png" class="bi me-3" width="40" height="40" />
+        <span class="h1">트위치<br />팬카페 패널</span>
       </a>
       <hr />
       <ul class="nav nav-pills flex-column mb-auto">
@@ -41,7 +35,7 @@
         </li>
         <li>
           <a href="#" class="nav-link text-white" data-tab-id="borads">
-            글목록 설정
+            게시판설정
           </a>
         </li>
         <li>
@@ -51,7 +45,427 @@
         </li>
       </ul>
     </nav>
-    <main class="d-flex h-100 col-lg-10"></main>
+    <main class="h-100 col-7 col-sm-8 col-md-9 col-lg-10 ps-4 pe-4">
+      <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div
+          id="saveToast"
+          class="toast"
+          role="alert"
+          data-bs-autohide="true"
+          data-bs-delay="3000"
+          aria-live="assertive"
+          aria-atomic="true"
+        >
+          <div class="toast-header">
+            <strong class="me-auto">설정저장</strong>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="toast"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="toast-body">설정이 저장되었습니다.</div>
+        </div>
+      </div>
+      <div
+        class="tab tab w-100 h-100 overflow-scroll pb-3"
+        data-tab-id="general"
+      >
+        <div
+          class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3 border-bottom"
+        >
+          <div class="h2">기본설정</div>
+        </div>
+
+        <div
+          class="w-100 border rounded pt-2 pb-2 ps-3 pe-3 mb-2 bg-light text-secondary description"
+        >
+          패널의 기본 환경설정 페이지입니다.
+        </div>
+
+        <div
+          class="w-100 border rounded pt-2 pb-2 ps-3 pe-3 mb-2 d-flex justify-content-center align-items-center flex-column gap-2"
+        >
+          <table class="w-100">
+            <tr>
+              <td>팬카페 패널 타이틀</td>
+              <td>
+                <input
+                  type="text"
+                  id="pannel-title-input"
+                  class="form-control"
+                  placeholder="20자 이내"
+                />
+                <div class="help-info">
+                  <div class="text">
+                    팬카페 패널 상단에 들어가는 제목입니다. 20자 이내를
+                    권장합니다. 적용된 테마에 따라 변경한 제목이 반영되지 않을
+                    수 있습니다.
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>네이버카페 ID</td>
+              <td>
+                <input
+                  type="text"
+                  id="pannel-naver-cafe-id-input"
+                  class="form-control"
+                  placeholder="네이버카페 주소의 search.clubid"
+                />
+                <div class="help-info">
+                  <div class="text">
+                    게시판을 가져올 네이버카페의 고유ID입니다(네이버 로그인 ID
+                    아님.) 게시판을 가져올 네이버카페 주소창에서
+                    "search.clubid"의 숫자로 구성된 ID를 복사해 붙여넣어주세요.
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>트게더 ID</td>
+              <td>
+                <input
+                  type="text"
+                  id="pannel-tgd-id-input"
+                  class="form-control"
+                  placeholder="트게더 주소 'https://tgd.kr/s/{고유ID}'의 고유ID"
+                />
+                <div class="help-info">
+                  <div class="text">
+                    게시판을 가져올 트게더의 고유ID입니다. 게시판을 가져올
+                    트게더의 "https://tgd.kr/s/{고유ID}" 주소에서 {고유ID}
+                    부분을 복사해 붙여넣어주세요.
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>로딩페이지 로딩문구</td>
+              <td>
+                <input
+                  type="text"
+                  id="pannel-loading-text-input"
+                  class="form-control"
+                />
+                <div class="help-info">
+                  <div class="text">
+                    게시판 로딩페이지에서 띄울 로딩문구입니다.
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>로딩 실패시 문구</td>
+              <td>
+                <input
+                  type="text"
+                  id="pannel-failed-text-input"
+                  class="form-control"
+                />
+                <div class="help-info">
+                  <div class="text">게시판 로딩 실패시 띄울 문구입니다.</div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>링크복사 알림 문구</td>
+              <td>
+                <input
+                  type="text"
+                  id="pannel-copy-text-input"
+                  class="form-control"
+                />
+                <div class="help-info">
+                  <div class="text">
+                    게시글을 클릭하여 링크를 복사했을 때 띄울 문구입니다.
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>API URL</td>
+              <td>
+                <input
+                  type="text"
+                  id="pannel-api-url-input"
+                  class="form-control"
+                />
+                <div class="help-info">
+                  <div class="text">
+                    게시판 데이터를 가져올 API의 URL입니다.
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div class="btn-group float-end mt-3" role="group">
+          <button
+            type="button"
+            class="btn btn-secondary btn-sm"
+            data-bs-toggle="modal"
+            data-bs-target="#resetGeneralModal"
+          >
+            초기화
+          </button>
+          <button type="button" class="btn btn-success btn-sm btn-general-save">
+            저장
+          </button>
+        </div>
+
+        <div class="modal fade" id="resetGeneralModal" tabindex="-1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title h2">기본설정 초기화</h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <p>
+                  설정 초기화는 저장 버튼을 통해 저장 후에 적용됩니다. 저장
+                  이전에 새로고침을 하면 초기화 이전 값으로 돌아가게 됩니다.
+                </p>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  data-bs-dismiss="modal"
+                >
+                  취소
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary btn-general-reset"
+                  data-bs-dismiss="modal"
+                >
+                  초기화
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="tab tab w-100 h-100 overflow-scroll pb-3"
+        data-tab-id="borads"
+      >
+        <div
+          class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3 border-bottom"
+        >
+          <div class="h2">게시판설정</div>
+        </div>
+
+        <div
+          class="w-100 border rounded pt-2 pb-2 ps-3 pe-3 mb-2 bg-light text-secondary description"
+        >
+          게시판 환경설정 페이지입니다. <br />
+          최대 4개의 <span class="fw-bold d-inline">"네이버카페"</span>,
+          <span class="fw-bold d-inline">"트게더"</span> 게시판을 등록할 수
+          있습니다.
+        </div>
+        <div
+          class="w-100 border rounded pt-2 pb-2 ps-3 pe-3 mb-2 d-flex justify-content-between align-items-center gap-4 item-board"
+        >
+          <span class="fs-6 text-nowrap d-block h-100">게시판1</span>
+          <div class="w-100 p-3 bg-light border rounded">
+            <table class="w-100">
+              <tr>
+                <td class="text-secondary">게시판명</td>
+                <td>
+                  <input type="text" class="form-control borad-title" />
+                  <div class="help-info">
+                    <div class="text">탭에 표시될 게시판의 이름입니다.</div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="text-secondary">플랫폼</td>
+                <td>
+                  <select class="form-select borad-type">
+                    <option value="naver-cafe" selected>네이버카페</option>
+                    <option value="tgd">트게더</option>
+                  </select>
+                  <div class="help-info">
+                    <div class="text">
+                      게시판을 가져올 플랫폼입니다. [기본설정]에서 사용할
+                      플랫폼의 ID 설정이 되어있어야 합니다.
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="text-secondary">게시판ID</td>
+                <td>
+                  <input type="text" class="form-control borad-menuid" />
+                  <div class="help-info">
+                    <div class="text">
+                      가져올 게시판의 ID입니다. 네이버카페는 게시판 페이지 주소
+                      내 search.menuid의 값을 복사하여 붙여넣습니다. 트게더는
+                      주소 내 category의 값을 복사하여 붙여넣습니다.
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="text-secondary">게시글개수</td>
+                <td>
+                  <div class="input-group">
+                    <select class="form-select borad-menuid">
+                      <option value="5">5</option>
+                      <option value="10">10</option>
+                      <option value="15" selected>15</option>
+                      <option value="20">20</option>
+                      <option value="30">30</option>
+                      <option value="40">40</option>
+                      <option value="50">50</option>
+                    </select>
+                    <label class="input-group-text">개</label>
+                  </div>
+                  <div class="help-info">
+                    <div class="text">
+                      가져올 게시판의 개시글 최대 개수입니다(공지글은 이 개수에
+                      포함되지 않습니다.)
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="text-secondary">공지글숨기기</td>
+                <td>
+                  <div class="input-group form-switch">
+                    <input
+                      type="checkbox"
+                      class="form-check-input mt-2 borad-skipnotice"
+                    />
+                  </div>
+                  <div class="help-info">
+                    <div class="text">
+                      공지글 숨기기를 활성화하면 게시글을 가져올 때 공지글은
+                      가져오지 않습니다.
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <div class="btn-group float-end mt-3" role="group">
+                    <button
+                      type="button"
+                      class="btn btn-danger btn-sm btn-borads-del"
+                    >
+                      삭제
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-primary btn-sm btn-boards-add"
+                    >
+                      추가
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="btn-group float-end mt-3" role="group">
+          <button
+            type="button"
+            class="btn btn-secondary btn-sm btn-boards-reset"
+          >
+            초기화
+          </button>
+          <button type="button" class="btn btn-success btn-sm btn-boards-save">
+            저장
+          </button>
+        </div>
+      </div>
+      <div
+        class="tab tab w-100 h-100 overflow-scroll pb-3"
+        data-tab-id="banners"
+      >
+        <div
+          class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3 border-bottom"
+        >
+          <div class="h2">배너설정</div>
+        </div>
+
+        <div
+          class="w-100 border rounded pt-2 pb-2 ps-3 pe-3 mb-2 bg-light text-secondary description"
+        >
+          배너이미지와 재생속도를 지정할 수 있는 설정페이지입니다. <br />
+          <span class="fw-bold">"https://cdn.jsdelivr.net"</span>으로 시작하는
+          이미지 URL을 배너이미지 URL로 지정하세요.<br />
+          (256[가로]:55[세로] 비율의 이미지 권장, 배너 개수 제한 없음,
+          png/jpg/gif 사용 가능)
+        </div>
+
+        <div
+          class="w-100 border rounded pt-2 pb-2 ps-3 pe-3 mb-2 d-flex justify-content-between align-items-center gap-4"
+        >
+          <span class="fs-6 text-nowrap d-block h-100">배너재생속도</span>
+          <span class="fs-6 text-nowrap d-block h-100 banner-speed"
+            ><span id="banner-speed-text"></span>초</span
+          >
+          <input
+            type="range"
+            id="banner-speed"
+            class="form-range"
+            value="4000"
+            min="1000"
+            max="10000"
+            step="100"
+          />
+        </div>
+        <div
+          class="w-100 border rounded pt-2 pb-2 ps-3 pe-3 mb-2 d-flex justify-content-center align-items-start flex-column gap-2 banners-list"
+        >
+          <div
+            class="w-100 border rounded pt-2 pb-2 ps-3 pe-3 bg-light d-flex justify-content-between align-items-center gap-4 item-banner"
+          >
+            <span class="fs-6 text-nowrap d-block h-100 text-secondary"
+              >배너1</span
+            >
+            <input
+              type="text"
+              class="form-control banner-url"
+              placeholder="ex) https://cdn.jsdelivr.net/gh/testuser/image-cdn/test.png"
+            />
+            <button
+              type="button"
+              class="btn btn-danger btn-sm text-nowrap btn-banners-del"
+            >
+              삭제
+            </button>
+          </div>
+        </div>
+
+        <div class="btn-group float-end mt-3" role="group">
+          <button
+            type="button"
+            class="btn btn-secondary btn-sm btn-banners-reset"
+          >
+            초기화
+          </button>
+          <button type="button" class="btn btn-primary btn-sm btn-banners-add">
+            +배너추가
+          </button>
+          <button type="button" class="btn btn-success btn-sm btn-banners-save">
+            저장
+          </button>
+        </div>
+      </div>
+    </main>
     <script src="common.js" type="text/javascript"></script>
     <script src="config.js" type="text/javascript"></script>
   </body>

@@ -1,12 +1,11 @@
 let token, userId, options, bannerNum;
 
-const PROD_API_URL = ``;
-const DEV_API_URL = `http://localhost:8888/api/cafelist`;
+const defaultDevAPIURL = `http://localhost:8888/api/cafelist`;
 
 const defaultPannelTitle = "팬카페 트위치 패널";
 const defaultToastMsgLinkCopy = "복사되었습니다!";
-const defaultFailedScreenSaverText = "글목록을 불러올 수 없습니다.";
-const defaultLoadingScreenSaverText = "글목록 로딩중";
+const defaultFailedScreenSaverText = "게시판을 불러올 수 없습니다.";
+const defaultLoadingScreenSaverText = "게시판 로딩중";
 const defaultBannerSlideInterval = 4000;
 
 const twitch = window.Twitch.ext;
@@ -21,11 +20,12 @@ twitch.configuration.onChanged(function () {
       const config = JSON.parse(twitch.configuration.broadcaster.content);
       options = config;
 
-      if (!options.mode) options.mode = "prod";
+      if (!options.apiURL) options.apiURL = defaultDevAPIURL;
 
       if (!options.cafeId)
         options.cafeId = {
           naverCafe: "",
+          tgd: "",
         };
 
       if (!options.banners) options.banners = [];
@@ -65,9 +65,10 @@ twitch.configuration.onChanged(function () {
 
 function setDefaultSetting() {
   options = {
-    mode: "prod",
+    apiURL: defaultDevAPIURL,
     cafeId: {
       naverCafe: "",
+      tgd: "",
     },
     banners: [],
     tabs: [],
@@ -77,4 +78,25 @@ function setDefaultSetting() {
     loadingScreenSaverText: defaultLoadingScreenSaverText,
     failedScreenSaverText: defaultFailedScreenSaverText,
   };
+}
+
+function setDefaultGeneralSetting() {
+  options.apiURL = defaultDevAPIURL;
+  options.cafeId = {
+    naverCafe: "",
+    tgd: "",
+  };
+  options.pannelTitle = defaultPannelTitle;
+  options.toastMsgLinkCopy = defaultToastMsgLinkCopy;
+  options.bannerSlideInterval = defaultBannerSlideInterval;
+  options.loadingScreenSaverText = defaultLoadingScreenSaverText;
+  options.failedScreenSaverText = defaultFailedScreenSaverText;
+}
+
+function setDefaultBannersSetting() {
+  options.banners = [];
+}
+
+function setDefaultBoardsSetting() {
+  options.tabs = [];
 }

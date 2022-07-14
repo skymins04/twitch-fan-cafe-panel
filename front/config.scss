@@ -1,8 +1,16 @@
 * {
   box-sizing: border-box;
+  font-size: 12px !important;
 }
 
 :root {
+}
+
+.h1 {
+  font-size: 16px !important;
+}
+.h2 {
+  font-size: 24px !important;
 }
 
 html,
@@ -20,6 +28,98 @@ body {
   user-select: none;
 }
 
+.nav-link {
+  font-size: 13px !important;
+}
 .nav-link:not(.active):hover {
   background-color: #191d21 !important;
+}
+
+table tr td {
+  padding-bottom: 10px;
+  word-break: keep-all;
+
+  input[type="text"],
+  select {
+    display: inline-block !important;
+    width: calc(100% - 30px) !important;
+  }
+  .input-group {
+    display: inline-flex !important;
+    width: calc(100% - 30px) !important;
+  }
+}
+
+.banners-list::before {
+  content: "배너목록";
+  font-size: 1rem;
+}
+
+.banners-list:empty::after {
+  content: "[+배너추가] 버튼을 클릭해 새 배너를 추가해보세요!";
+  width: 100%;
+  padding: 30px 0;
+  text-align: center;
+  color: rgba(108, 117, 125, 1) !important;
+}
+.banner-speed {
+  display: block !important;
+  width: 3em !important;
+  min-width: 3em !important;
+}
+
+.help-info {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  margin-left: 10px;
+  padding: 8px;
+  border-radius: 50%;
+  font-size: 10px;
+  background-color: #ccc;
+  color: #666;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.2s;
+
+  &::before {
+    content: "?";
+  }
+
+  &:hover {
+    cursor: pointer;
+    box-shadow: 0 0 2px black;
+
+    .text {
+      display: block !important;
+    }
+  }
+
+  .text {
+    position: absolute;
+    display: none;
+    width: max-content;
+    max-width: 200px;
+    top: 10px;
+    right: 10px;
+    padding: 0.2em 0.5em;
+    border-radius: 5px;
+    font-size: 12px;
+    color: white !important;
+    background-color: #000000aa;
+    z-index: 1000;
+  }
+}
+
+@media (max-width: 768px) {
+  .item-board {
+    flex-direction: column !important;
+  }
+  .item-board.align-items-center {
+    align-items: flex-start !important;
+  }
+  .item-board.gap-4 {
+    gap: 10px !important;
+  }
 }
