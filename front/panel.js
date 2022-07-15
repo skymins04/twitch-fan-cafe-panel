@@ -38,6 +38,13 @@ function updateOptions() {
   });
   getCafeList(() => {
     setTimeout(UIinit, 100);
+    $(document).on("click", ".tab-btn", function (event) {
+      const tabNo = $(this).attr("data-tab-no");
+      $(".tab-btn").removeClass("selected");
+      $(this).addClass("selected");
+      $(".tab-content").hide();
+      $(`.tab-content[data-tab-no="${tabNo}"]`).show();
+    });
   });
 }
 
