@@ -93,10 +93,10 @@ function setDefaultGeneralSetting() {
   options.failedScreenSaverText = defaultFailedScreenSaverText;
 }
 
-function setDefaultBannersSetting() {
-  options.banners = [];
-}
-
 function setDefaultBoardsSetting() {
   options.tabs = [];
+}
+
+function setDefaultBannersSetting() {
+  options.banners = [];
 }

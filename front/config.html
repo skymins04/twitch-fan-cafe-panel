@@ -68,6 +68,28 @@
           <div class="toast-body">설정이 저장되었습니다.</div>
         </div>
       </div>
+      <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div
+          id="delToast"
+          class="toast"
+          role="alert"
+          data-bs-autohide="true"
+          data-bs-delay="3000"
+          aria-live="assertive"
+          aria-atomic="true"
+        >
+          <div class="toast-header">
+            <strong class="me-auto">삭제</strong>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="toast"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="toast-body">삭제되었습니다.</div>
+        </div>
+      </div>
       <div
         class="tab tab w-100 h-100 overflow-scroll pb-3"
         data-tab-id="general"
@@ -272,122 +294,62 @@
           <span class="fw-bold d-inline">"트게더"</span> 게시판을 등록할 수
           있습니다.
         </div>
-        <div
-          class="w-100 border rounded pt-2 pb-2 ps-3 pe-3 mb-2 d-flex justify-content-between align-items-center gap-4 item-board"
-        >
-          <span class="fs-6 text-nowrap d-block h-100">게시판1</span>
-          <div class="w-100 p-3 bg-light border rounded">
-            <table class="w-100">
-              <tr>
-                <td class="text-secondary">게시판명</td>
-                <td>
-                  <input type="text" class="form-control borad-title" />
-                  <div class="help-info">
-                    <div class="text">탭에 표시될 게시판의 이름입니다.</div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="text-secondary">플랫폼</td>
-                <td>
-                  <select class="form-select borad-type">
-                    <option value="naver-cafe" selected>네이버카페</option>
-                    <option value="tgd">트게더</option>
-                  </select>
-                  <div class="help-info">
-                    <div class="text">
-                      게시판을 가져올 플랫폼입니다. [기본설정]에서 사용할
-                      플랫폼의 ID 설정이 되어있어야 합니다.
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="text-secondary">게시판ID</td>
-                <td>
-                  <input type="text" class="form-control borad-menuid" />
-                  <div class="help-info">
-                    <div class="text">
-                      가져올 게시판의 ID입니다. 네이버카페는 게시판 페이지 주소
-                      내 search.menuid의 값을 복사하여 붙여넣습니다. 트게더는
-                      주소 내 category의 값을 복사하여 붙여넣습니다.
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="text-secondary">게시글개수</td>
-                <td>
-                  <div class="input-group">
-                    <select class="form-select borad-menuid">
-                      <option value="5">5</option>
-                      <option value="10">10</option>
-                      <option value="15" selected>15</option>
-                      <option value="20">20</option>
-                      <option value="30">30</option>
-                      <option value="40">40</option>
-                      <option value="50">50</option>
-                    </select>
-                    <label class="input-group-text">개</label>
-                  </div>
-                  <div class="help-info">
-                    <div class="text">
-                      가져올 게시판의 개시글 최대 개수입니다(공지글은 이 개수에
-                      포함되지 않습니다.)
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="text-secondary">공지글숨기기</td>
-                <td>
-                  <div class="input-group form-switch">
-                    <input
-                      type="checkbox"
-                      class="form-check-input mt-2 borad-skipnotice"
-                    />
-                  </div>
-                  <div class="help-info">
-                    <div class="text">
-                      공지글 숨기기를 활성화하면 게시글을 가져올 때 공지글은
-                      가져오지 않습니다.
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>
-                  <div class="btn-group float-end mt-3" role="group">
-                    <button
-                      type="button"
-                      class="btn btn-danger btn-sm btn-borads-del"
-                    >
-                      삭제
-                    </button>
-                    <button
-                      type="button"
-                      class="btn btn-primary btn-sm btn-boards-add"
-                    >
-                      추가
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            </table>
-          </div>
-        </div>
+
+        <div class="w-100 item-boards"></div>
 
         <div class="btn-group float-end mt-3" role="group">
           <button
             type="button"
-            class="btn btn-secondary btn-sm btn-boards-reset"
+            class="btn btn-secondary btn-sm"
+            data-bs-toggle="modal"
+            data-bs-target="#resetBoardsModal"
           >
             초기화
+          </button>
+          <button type="button" class="btn btn-primary btn-sm btn-boards-add">
+            +게시판추가
           </button>
           <button type="button" class="btn btn-success btn-sm btn-boards-save">
             저장
           </button>
+        </div>
+
+        <div class="modal fade" id="resetBoardsModal" tabindex="-1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title h2">게시판설정 초기화</h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <p>
+                  설정 초기화는 저장 버튼을 통해 저장 후에 적용됩니다. 저장
+                  이전에 새로고침을 하면 초기화 이전 값으로 돌아가게 됩니다.
+                </p>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  data-bs-dismiss="modal"
+                >
+                  취소
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary btn-boards-reset"
+                  data-bs-dismiss="modal"
+                >
+                  초기화
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div
@@ -428,32 +390,15 @@
           />
         </div>
         <div
-          class="w-100 border rounded pt-2 pb-2 ps-3 pe-3 mb-2 d-flex justify-content-center align-items-start flex-column gap-2 banners-list"
-        >
-          <div
-            class="w-100 border rounded pt-2 pb-2 ps-3 pe-3 bg-light d-flex justify-content-between align-items-center gap-4 item-banner"
-          >
-            <span class="fs-6 text-nowrap d-block h-100 text-secondary"
-              >배너1</span
-            >
-            <input
-              type="text"
-              class="form-control banner-url"
-              placeholder="ex) https://cdn.jsdelivr.net/gh/testuser/image-cdn/test.png"
-            />
-            <button
-              type="button"
-              class="btn btn-danger btn-sm text-nowrap btn-banners-del"
-            >
-              삭제
-            </button>
-          </div>
-        </div>
+          class="w-100 border rounded pt-2 pb-2 ps-3 pe-3 mb-2 d-flex justify-content-center align-items-start flex-column gap-2 item-banners"
+        ></div>
 
         <div class="btn-group float-end mt-3" role="group">
           <button
             type="button"
-            class="btn btn-secondary btn-sm btn-banners-reset"
+            class="btn btn-secondary btn-sm"
+            data-bs-toggle="modal"
+            data-bs-target="#resetBannersModal"
           >
             초기화
           </button>
@@ -463,6 +408,44 @@
           <button type="button" class="btn btn-success btn-sm btn-banners-save">
             저장
           </button>
+        </div>
+
+        <div class="modal fade" id="resetBannersModal" tabindex="-1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title h2">배너설정 초기화</h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <p>
+                  설정 초기화는 저장 버튼을 통해 저장 후에 적용됩니다. 저장
+                  이전에 새로고침을 하면 초기화 이전 값으로 돌아가게 됩니다.
+                </p>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  data-bs-dismiss="modal"
+                >
+                  취소
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary btn-banners-reset"
+                  data-bs-dismiss="modal"
+                >
+                  초기화
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </main>

@@ -54,12 +54,32 @@ table tr td .input-group {
   width: calc(100% - 30px) !important;
 }
 
-.banners-list::before {
+.item-boards:empty::before {
+  content: "[+게시판추가] 버튼을 클릭해 새 게시판을 추가해보세요!";
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 100%;
+  padding: 40px 0;
+  text-align: center;
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+  color: #6c757d !important;
+}
+
+.item-banners::before {
   content: "배너목록";
   font-size: 1rem;
 }
 
-.banners-list:empty::after {
+.item-banners:empty::after {
   content: "[+배너추가] 버튼을 클릭해 새 배너를 추가해보세요!";
   width: 100%;
   padding: 30px 0;
