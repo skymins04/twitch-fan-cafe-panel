@@ -1,15 +1,5 @@
 import { Handler } from "@netlify/functions";
-import * as axios from "axios";
-import * as iconv from "iconv-lite";
-import * as $ from "cheerio";
-
-const defaultHeader = {
-  "Access-Control-Allow-Origin": "*",
-};
-const failResponse = {
-  statusCode: 400,
-  headers: defaultHeader,
-};
+import fanCafeParser from "../libs/FanCafeParser";
 
 // 최대 동시 파싱 글목록 수
 const MAX_BOARD_NUM = 4;
@@ -26,30 +16,30 @@ const MAX_BOARD_NUM = 4;
  */
 
 const handler: Handler = async (event, context) => {
-  if (event.body === null) return failResponse;
+  if (event.body === null) return fanCafeParser.failResponse;
 
   // URL 유효성 검사
   const { cafeId, boards } = JSON.parse(event.body);
   const checkedBoards = [];
 
-  if (!(boards instanceof Array) || boards.length === 0) return failResponse;
+  if (!(boards instanceof Array) || boards.length === 0)
+    return fanCafeParser.failResponse;
   for (const { idx, board } of boards.map((board, idx) => ({ idx, board }))) {
     if (idx === MAX_BOARD_NUM) break;
     else if (
-      typeof board.title !== "string" ||
       typeof board.menuId !== "string" ||
       typeof board.count !== "number" ||
       typeof board.type !== "string" ||
       typeof board.skipNotice !== "boolean"
     )
-      return failResponse;
+      return fanCafeParser.failResponse;
     checkedBoards.push(board);
   }
 
   // 각 URL 별 네이버카페 글목록 데이터 파싱
 
   const data = [];
-  for (const { title, menuId, count, type, skipNotice } of checkedBoards) {
+  for (const { menuId, count, type, skipNotice } of checkedBoards) {
     let c = count;
     switch (count) {
       case 5:
@@ -67,7 +57,12 @@ const handler: Handler = async (event, context) => {
     switch (type) {
       case "naver-cafe":
         data.push(
-          await parseNaverCafe(cafeId.naverCafe, title, menuId, c, skipNotice)
+          await fanCafeParser.naverCafeParser(
+            cafeId.naverCafe,
+            menuId,
+            c,
+            skipNotice
+          )
         );
         break;
     }
@@ -75,72 +70,10 @@ const handler: Handler = async (event, context) => {
 
   return {
     statusCode: 200,
-    headers: defaultHeader,
+    headers: fanCafeParser.defaultHeader,
     body: JSON.stringify({
       data,
     }),
-  };
-};
-
-/**
- * 네이버카페 글목록 파싱 함수
- * @param {string} cafeId
- * @param {string} title
- * @param {string} menuId
- * @param {number} count
- * @param {boolean} skipNotice
- * @returns
- */
-const parseNaverCafe = async (
-  cafeId: string,
-  title: string,
-  menuId: string,
-  count: number,
-  skipNotice: boolean
-) => {
-  const url = `https://cafe.naver.com/ArticleList.nhn?search.clubid=${cafeId}&search.menuid=${menuId}&userDisplay=${count}&search.boardtype=L&search.cafeId=${cafeId}&search.page=1`;
-  const $content = $.load(
-    await axios
-      .default({ url, method: "GET", responseType: "arraybuffer" })
-      .then((res) => iconv.decode(res.data, "EUC-KR"))
-  );
-
-  const $noticeArticleList = $content(
-    "div.article-board div.inner_list a.article"
-  );
-  const $normalArticleList = $content(
-    "div.article-board:not(#upperArticleList) div.inner_list a.article"
-  );
-
-  const articles: { title: string; url: string; isNotice: boolean }[] = [];
-  if (!skipNotice) {
-    $noticeArticleList.each((idx, ele) => {
-      articles.push({
-        title: $content(ele)
-          .text()
-          .replace(/(\n|\t)/g, "")
-          .trim()
-          .replace(/ +/g, " "),
-        url: `https://cafe.naver.com${$content(ele).attr("href")}`,
-        isNotice: true,
-      });
-    });
-  }
-  $normalArticleList.each((idx, ele) => {
-    articles.push({
-      title: $content(ele)
-        .text()
-        .replace(/(\n|\t)/g, "")
-        .trim()
-        .replace(/ +/g, " "),
-      url: `https://cafe.naver.com${$content(ele).attr("href")}`,
-      isNotice: false,
-    });
-  });
-  return {
-    title,
-    articles,
-    type: "naver-cafe",
   };
 };
 
