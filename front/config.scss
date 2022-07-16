@@ -128,6 +128,29 @@ table tr td {
   }
 }
 
+.save-info {
+  display: none;
+  color: #0c6efd;
+  animation: save-info-blink 0.6s ease-in-out infinite alternate;
+
+  @keyframes save-info-blink {
+    from {
+      opacity: 0.5;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  svg {
+    position: relative;
+    top: -0.09em;
+    width: 1.2em;
+    height: 1.2em;
+    fill: #0c6efd;
+  }
+}
+
 @media (max-width: 768px) {
   .item-board {
     flex-direction: column !important;

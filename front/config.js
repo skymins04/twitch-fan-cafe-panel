@@ -45,31 +45,40 @@ function updateOptions() {
     $("#pannel-title-input").val(config.pannelTitle);
     $("#pannel-title-input").change(function (e) {
       config.pannelTitle = $(this).val();
+      $("#save-icon-general").show();
     });
     $("#pannel-naver-cafe-id-input").val(config.cafeId.naverCafe);
     $("#pannel-naver-cafe-id-input").change(function (e) {
       config.cafeId.naverCafe = $(this).val();
+      $("#save-icon-general").show();
     });
     $("#pannel-tgd-id-input").val(config.cafeId.tgd);
     $("#pannel-tgd-id-input").change(function (e) {
       config.cafeId.tgd = $(this).val();
+      $("#save-icon-general").show();
     });
     $("#pannel-loading-text-input").val(config.loadingScreenSaverText);
     $("#pannel-loading-text-input").change(function (e) {
       config.loadingScreenSaverText = $(this).val();
+      $("#save-icon-general").show();
     });
     $("#pannel-failed-text-input").val(config.failedScreenSaverText);
     $("#pannel-failed-text-input").change(function (e) {
       config.failedScreenSaverText = $(this).val();
+      $("#save-icon-general").show();
     });
     $("#pannel-copy-text-input").val(config.toastMsgLinkCopy);
     $("#pannel-copy-text-input").change(function (e) {
       config.toastMsgLinkCopy = $(this).val();
+      $("#save-icon-general").show();
     });
     $("#pannel-api-url-input").val(config.apiURL);
     $("#pannel-api-url-input").change(function (e) {
       config.apiURL = $(this).val();
+      $("#save-icon-general").show();
     });
+
+    $("#save-icon-general").show();
   }
 
   /**
@@ -176,27 +185,34 @@ function updateOptions() {
       $(".board-title").each((idx, itm) => {
         config.tabs[idx].title = $(itm).val();
       });
+      $("#save-icon-boards").show();
     });
     $(document).on("change", ".board-type", function (e) {
       $(".board-type").each((idx, itm) => {
         config.tabs[idx].type = $(itm).val();
       });
+      $("#save-icon-boards").show();
     });
     $(document).on("change", ".board-menuid", function (e) {
       $(".board-menuid").each((idx, itm) => {
         config.tabs[idx].menuId = $(itm).val();
       });
+      $("#save-icon-boards").show();
     });
     $(document).on("change", ".board-count", function (e) {
       $(".board-count").each((idx, itm) => {
         config.tabs[idx].count = parseInt($(itm).val());
       });
+      $("#save-icon-boards").show();
     });
     $(document).on("click", ".board-skipnotice", function (e) {
       $(".board-skipnotice").each((idx, itm) => {
         config.tabs[idx].skipNotice = $(itm).prop("checked");
       });
+      $("#save-icon-boards").show();
     });
+
+    $("#save-icon-boards").show();
   }
 
   /**
@@ -207,6 +223,7 @@ function updateOptions() {
     $("#banner-speed").on("input", function (e) {
       config.bannerSlideInterval = parseInt($(this).val());
       setBannerSpeed(config.bannerSlideInterval);
+      $("#save-icon-banners").show();
     });
 
     $(".item-banners").empty();
@@ -229,7 +246,10 @@ function updateOptions() {
       $(".banner-url").each((idx, itm) => {
         config.banners[idx] = $(itm).val();
       });
+      $("#save-icon-banners").show();
     });
+
+    $("#save-icon-banners").show();
   }
 
   /**
@@ -247,6 +267,8 @@ function updateOptions() {
     options.failedScreenSaverText = config.failedScreenSaverText;
     options.toastMsgLinkCopy = config.toastMsgLinkCopy;
     options.apiURL = config.apiURL;
+
+    $("#save-icon-general").hide();
     saveOptions();
   });
 
@@ -286,6 +308,8 @@ function updateOptions() {
   });
   $(document).on("click", ".btn-boards-save", function (event) {
     options.tabs = config.tabs;
+
+    $("#save-icon-boards").hide();
     saveOptions();
   });
 
@@ -309,10 +333,15 @@ function updateOptions() {
   });
   $(document).on("click", ".btn-banners-save", function (event) {
     options.banners = config.banners;
+
+    $("#save-icon-banners").hide();
     saveOptions();
   });
 
   updateConfigGeneral();
   updateConfigBoards();
   updateConfigBanners();
+  $("#save-icon-general").hide();
+  $("#save-icon-boards").hide();
+  $("#save-icon-banners").hide();
 }
