@@ -1,7 +1,3 @@
-var bannerNum;
-const PROD_API_URL = ``;
-const DEV_API_URL = `http://localhost:8888/api/cafelist`;
-
 /**
  * Twitch Configuration 로드 완료시 실행되는 함수
  */
@@ -42,6 +38,13 @@ function updateOptions() {
   });
   getCafeList(() => {
     setTimeout(UIinit, 100);
+    $(document).on("click", ".tab-btn", function (event) {
+      const tabNo = $(this).attr("data-tab-no");
+      $(".tab-btn").removeClass("selected");
+      $(this).addClass("selected");
+      $(".tab-content").hide();
+      $(`.tab-content[data-tab-no="${tabNo}"]`).show();
+    });
   });
 }
 
@@ -134,7 +137,7 @@ function getCafeList(callback) {
   } else {
     $.ajax({
       type: "POST",
-      url: DEV_API_URL,
+      url: options.apiURL,
       data: JSON.stringify(reqParam),
       dataType: "text",
     })
