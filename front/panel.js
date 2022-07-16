@@ -151,7 +151,7 @@ function getCafeList(callback) {
           tabBtn.addClass(itm.type);
           if (i === 0) tabBtn.addClass("selected");
           tabBtn.attr("data-tab-no", i);
-          tabBtn.html(itm.title);
+          tabBtn.html(options.tabs[i].title);
 
           const tabContent = $("<ul></ul>");
           tabContent.addClass("tab-content");
@@ -166,7 +166,7 @@ function getCafeList(callback) {
             const tabContentItemTitle = $(
               `<span class="title">${noticeTag}<span class="idx">${
                 j + 1
-              }</span><span class="dot">.</span>${article.title}</span>`
+              }</span><span class="dot">.</span>${article.articleTitle}</span>`
             );
             tabContentItem.append(tabContentItemTitle);
             tabContentItem.attr("data-clipboard-text", article.url);
