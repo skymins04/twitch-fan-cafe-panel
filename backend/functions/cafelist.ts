@@ -65,6 +65,11 @@ const handler: Handler = async (event, context) => {
           )
         );
         break;
+      case "tgd":
+        console.log("hello world");
+        data.push(
+          await fanCafeParser.tgdParser(cafeId.tgd, menuId, c, skipNotice)
+        );
     }
   }
 

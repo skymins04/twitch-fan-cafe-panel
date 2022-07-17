@@ -53,7 +53,7 @@ class FanCafeParser {
   };
 
   /**
-   * 네이버카페 글목록 파싱 함수
+   * 네이버카페 게시판 글목록 파싱 함수
    * @param {string} cafeId
    * @param {string} menuId
    * @param {number} count
@@ -62,20 +62,23 @@ class FanCafeParser {
    */
   naverCafeParser: Parser = async (cafeId, menuId, count, skipNotice) => {
     const url = `https://cafe.naver.com/ArticleList.nhn?search.clubid=${cafeId}&search.menuid=${menuId}&userDisplay=${count}&search.boardtype=L&search.cafeId=${cafeId}&search.page=1`;
+    const articles: Array<CafeArticle> = [];
+
     const $content = $.load(
       await axios
-        .default({ url, method: "GET", responseType: "arraybuffer" })
+        .default({
+          url,
+          method: "GET",
+          responseType: "arraybuffer",
+        })
         .then((res) => iconv.decode(res.data, "EUC-KR"))
     );
-
     const $noticeArticleList = $content(
       "div.article-board div.inner_list a.article"
     );
     const $normalArticleList = $content(
       "div.article-board:not(#upperArticleList) div.inner_list a.article"
     );
-
-    const articles: Array<CafeArticle> = [];
     if (!skipNotice) {
       $noticeArticleList.each((idx, ele) => {
         articles.push({
@@ -104,6 +107,83 @@ class FanCafeParser {
     return {
       articles,
       type: "naver-cafe",
+    };
+  };
+
+  /**
+   * 트게더 게시판 글목록 파싱 함수
+   * @param {string} cafeId
+   * @param {string} menuId
+   * @param {number} count
+   * @param {boolean} skipNotice
+   * @returns
+   */
+  tgdParser: Parser = async (cafeId, menuId, count, skipNotice) => {
+    let pageNum = 0;
+    const articles: Array<CafeArticle> = [];
+    const nomarlArticles: Array<CafeArticle> = [];
+    const noticeArticles: Array<CafeArticle> = [];
+
+    while (true) {
+      const url = `https://tgd.kr/s/${cafeId}/page/${pageNum}?category=${menuId}`;
+      const $content = $.load(
+        await axios.default({ url, method: "GET" }).then((res) => res.data)
+      );
+      const $noticeArticleList = $content(
+        "div#article-list div.article-list-row.notice div.list-title a"
+      );
+      const $normalArticleList = $content(
+        "div#article-list div.article-list-row:not(.notice) div.list-title a"
+      );
+
+      if (!skipNotice) {
+        $noticeArticleList.each((idx, ele) => {
+          const title = $content(ele).attr("title");
+          const href = $content(ele).attr("href");
+          if (title && href) {
+            noticeArticles.push({
+              articleTitle: title
+                .replace(/(\n|\t)/g, "")
+                .trim()
+                .replace(/ +/g, " "),
+              url: `https://tgd.kr${href}`,
+              isNotice: true,
+            });
+          }
+        });
+      }
+
+      $normalArticleList.each((idx, ele) => {
+        const title = $content(ele).attr("title");
+        const href = $content(ele).attr("href");
+        if (nomarlArticles.length >= count) return;
+        else if (title && href) {
+          nomarlArticles.push({
+            articleTitle: title
+              .replace(/(\n|\t)/g, "")
+              .trim()
+              .replace(/ +/g, " "),
+            url: `https://tgd.kr${href}`,
+            isNotice: false,
+          });
+        }
+      });
+
+      if (
+        (pageNum !== 1 && $normalArticleList.length !== 30) ||
+        nomarlArticles.length >= count
+      )
+        break;
+
+      pageNum += 1;
+    }
+
+    articles.push(...noticeArticles);
+    articles.push(...nomarlArticles);
+
+    return {
+      articles,
+      type: "tgd",
     };
   };
 }
