@@ -1,3 +1,8 @@
+function randomNum(min, max) {
+  var randNum = Math.floor(Math.random() * (max - min + 1)) + min;
+  return randNum;
+}
+
 /**
  * Twitch Configuration 로드 완료시 실행되는 함수
  */
@@ -166,11 +171,19 @@ function getCafeList(callback) {
             const tabContentItemTitle = $(
               `<span class="title">${noticeTag}<span class="idx">${
                 j + 1
-              }</span><span class="dot">.</span>${article.articleTitle}</span>`
+              }</span><span class="dot">.</span><span class="text">${
+                article.articleTitle
+              }</span></span>`
             );
             tabContentItem.append(tabContentItemTitle);
             tabContentItem.attr("data-clipboard-text", article.url);
+            tabContentItem.attr("data-article-no", j + 1);
             tabContentItem.addClass("item");
+            tabContentItem.addClass((j + 1) % 2 == 1 ? "odd" : "even");
+            tabContentItem.addClass(`ran2_${randomNum(0, 1)}`);
+            tabContentItem.addClass(`ran3_${randomNum(0, 2)}`);
+            tabContentItem.addClass(`ran4_${randomNum(0, 3)}`);
+            tabContentItem.addClass(`ran5_${randomNum(0, 5)}`);
             if (article.isNotice) tabContentItem.addClass("item-notice");
             tabContent.append(tabContentItem);
           });
