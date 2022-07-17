@@ -32,9 +32,9 @@ twitch.configuration.onChanged(function () {
 
       if (!options.tabs) options.tabs = [];
 
-      if (!options.panelTitle) options.pannelTitle = defaultPannelTitle;
-      else if (options.panelTitle.trim() === "")
-        options.panelTitle = defaultPannelTitle;
+      if (!options.pannelTitle) options.pannelTitle = defaultPannelTitle;
+      else if (options.pannelTitle.trim() === "")
+        options.pannelTitle = defaultPannelTitle;
 
       if (!options.toastMsgLinkCopy)
         options.toastMsgLinkCopy = defaultToastMsgLinkCopy;
