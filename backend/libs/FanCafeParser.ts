@@ -61,6 +61,9 @@ class FanCafeParser {
    * @returns
    */
   naverCafeParser: Parser = async (cafeId, menuId, count, skipNotice) => {
+    if (!cafeId.match(/^[0-9]+$/) || !menuId.match(/^[0-9]+$/))
+      return { articles: [], type: "naver-cafe" };
+
     const url = `https://cafe.naver.com/ArticleList.nhn?search.clubid=${cafeId}&search.menuid=${menuId}&userDisplay=${count}&search.boardtype=L&search.cafeId=${cafeId}&search.page=1`;
     const articles: Array<CafeArticle> = [];
 
@@ -119,6 +122,12 @@ class FanCafeParser {
    * @returns
    */
   tgdParser: Parser = async (cafeId, menuId, count, skipNotice) => {
+    if (
+      !cafeId.match(/^[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|a-z|A-Z|0-9|_]+$/) ||
+      !menuId.match(/^[0-9]+$/)
+    )
+      return { articles: [], type: "tgd" };
+
     let pageNum = 0;
     const articles: Array<CafeArticle> = [];
     const nomarlArticles: Array<CafeArticle> = [];
