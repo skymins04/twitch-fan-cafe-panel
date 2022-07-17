@@ -42,38 +42,38 @@ function updateOptions() {
    * 기본설정 페이지 업데이트 함수
    */
   function updateConfigGeneral() {
-    $("#pannel-title-input").val(config.pannelTitle);
-    $("#pannel-title-input").change(function (e) {
-      config.pannelTitle = $(this).val();
+    $("#panel-title-input").val(config.panelTitle);
+    $("#panel-title-input").change(function (e) {
+      config.panelTitle = $(this).val();
       $("#save-icon-general").show();
     });
-    $("#pannel-naver-cafe-id-input").val(config.cafeId.naverCafe);
-    $("#pannel-naver-cafe-id-input").change(function (e) {
+    $("#panel-naver-cafe-id-input").val(config.cafeId.naverCafe);
+    $("#panel-naver-cafe-id-input").change(function (e) {
       config.cafeId.naverCafe = $(this).val();
       $("#save-icon-general").show();
     });
-    $("#pannel-tgd-id-input").val(config.cafeId.tgd);
-    $("#pannel-tgd-id-input").change(function (e) {
+    $("#panel-tgd-id-input").val(config.cafeId.tgd);
+    $("#panel-tgd-id-input").change(function (e) {
       config.cafeId.tgd = $(this).val();
       $("#save-icon-general").show();
     });
-    $("#pannel-loading-text-input").val(config.loadingScreenSaverText);
-    $("#pannel-loading-text-input").change(function (e) {
+    $("#panel-loading-text-input").val(config.loadingScreenSaverText);
+    $("#panel-loading-text-input").change(function (e) {
       config.loadingScreenSaverText = $(this).val();
       $("#save-icon-general").show();
     });
-    $("#pannel-failed-text-input").val(config.failedScreenSaverText);
-    $("#pannel-failed-text-input").change(function (e) {
+    $("#panel-failed-text-input").val(config.failedScreenSaverText);
+    $("#panel-failed-text-input").change(function (e) {
       config.failedScreenSaverText = $(this).val();
       $("#save-icon-general").show();
     });
-    $("#pannel-copy-text-input").val(config.toastMsgLinkCopy);
-    $("#pannel-copy-text-input").change(function (e) {
+    $("#panel-copy-text-input").val(config.toastMsgLinkCopy);
+    $("#panel-copy-text-input").change(function (e) {
       config.toastMsgLinkCopy = $(this).val();
       $("#save-icon-general").show();
     });
-    $("#pannel-api-url-input").val(config.apiURL);
-    $("#pannel-api-url-input").change(function (e) {
+    $("#panel-api-url-input").val(config.apiURL);
+    $("#panel-api-url-input").change(function (e) {
       config.apiURL = $(this).val();
       $("#save-icon-general").show();
     });
@@ -260,7 +260,7 @@ function updateOptions() {
     updateConfigGeneral();
   });
   $(document).on("click", ".btn-general-save", function (event) {
-    options.pannelTitle = config.pannelTitle;
+    options.panelTitle = config.panelTitle;
     options.cafeId.naverCafe = config.cafeId.naverCafe;
     options.cafeId.tgd = config.cafeId.tgd;
     options.loadingScreenSaverText = config.loadingScreenSaverText;

@@ -3,7 +3,7 @@
  */
 function updateOptions() {
   $("#loading-screen-saver .text").html(options.loadingScreenSaverText);
-  $(".header-title:first").html(options.pannelTitle);
+  $(".header-title:first").html(options.panelTitle);
 
   console.log(options);
   if (options.banners.length === 0) {
