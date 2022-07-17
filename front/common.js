@@ -32,9 +32,9 @@ twitch.configuration.onChanged(function () {
 
       if (!options.tabs) options.tabs = [];
 
-      if (!options.pannelTitle) options.pannelTitle = defaultPannelTitle;
-      else if (options.pannelTitle.trim() === "")
-        options.pannelTitle = defaultPannelTitle;
+      if (!options.panelTitle) options.panelTitle = defaultPannelTitle;
+      else if (options.panelTitle.trim() === "")
+        options.panelTitle = defaultPannelTitle;
 
       if (!options.toastMsgLinkCopy)
         options.toastMsgLinkCopy = defaultToastMsgLinkCopy;
@@ -72,7 +72,7 @@ function setDefaultSetting() {
     },
     banners: [],
     tabs: [],
-    pannelTitle: defaultPannelTitle,
+    panelTitle: defaultPannelTitle,
     toastMsgLinkCopy: defaultToastMsgLinkCopy,
     bannerSlideInterval: defaultBannerSlideInterval,
     loadingScreenSaverText: defaultLoadingScreenSaverText,
@@ -86,7 +86,7 @@ function setDefaultGeneralSetting() {
     naverCafe: "",
     tgd: "",
   };
-  options.pannelTitle = defaultPannelTitle;
+  options.panelTitle = defaultPannelTitle;
   options.toastMsgLinkCopy = defaultToastMsgLinkCopy;
   options.bannerSlideInterval = defaultBannerSlideInterval;
   options.loadingScreenSaverText = defaultLoadingScreenSaverText;
