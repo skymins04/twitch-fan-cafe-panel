@@ -9,10 +9,6 @@ const MAX_BOARD_NUM = 4;
  * @param event
  * @param context
  * @returns
- *
- * JSON.parse(event.body as string): {
- *  boards: {title: string, menuId: string, type: 'naver-cafe', count: number, skipNotice: boolean}[]
- * }
  */
 
 const handler: Handler = async (event, context) => {
@@ -65,6 +61,10 @@ const handler: Handler = async (event, context) => {
           )
         );
         break;
+      case "tgd":
+        data.push(
+          await fanCafeParser.tgdParser(cafeId.tgd, menuId, c, skipNotice)
+        );
     }
   }
 
