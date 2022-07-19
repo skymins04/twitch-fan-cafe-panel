@@ -159,17 +159,23 @@ class FanCafeParser {
       const $content = $.load(
         await axios.default({ url, method: "GET" }).then((res) => res.data)
       );
-      const $noticeArticleTitles = $content(
-        "div#article-list div.article-list-row.notice div.list-title a"
+
+      const $noticeArticles = $content(
+        "div#article-list div.article-list-row.notice"
       );
-      const $normalArticleTitles = $content(
-        "div#article-list div.article-list-row:not(.notice) div.list-title a"
+      const $normalArticles = $content(
+        "div#article-list div.article-list-row:not(.notice)"
       );
 
       if (!skipNotice) {
-        $noticeArticleTitles.each((idx, ele) => {
-          const title = $content(ele).attr("title");
-          const href = $content(ele).attr("href");
+        const $noticeTitles = $noticeArticles.find("div.list-title a");
+        const $noticeComments = $noticeArticles.find("small.comment-count");
+        const $noticeAuthors = $noticeArticles.find("div.list-writer span");
+        const $noticeDates = $noticeArticles.find("div.list-time");
+
+        for (let i = 0; i < $noticeTitles.length; i++) {
+          const title = $content($noticeTitles[i]).attr("title");
+          const href = $content($noticeTitles[i]).attr("href");
           if (title && href) {
             noticeArticles.push({
               articleTitle: title
@@ -177,16 +183,29 @@ class FanCafeParser {
                 .trim()
                 .replace(/ +/g, " "),
               url: `https://tgd.kr${href}`,
+              author: $content($noticeAuthors[i]).text().trim(),
+              date: $content($noticeDates[i]).text().trim(),
+              cmt: parseInt(
+                $content($noticeComments[i])
+                  .text()
+                  .trim()
+                  .replace(/(\[|\])/g, "")
+              ),
               isNotice: true,
             });
           }
-        });
+        }
       }
 
-      $normalArticleTitles.each((idx, ele) => {
-        const title = $content(ele).attr("title");
-        const href = $content(ele).attr("href");
-        if (nomarlArticles.length >= count) return;
+      const $normalTitles = $normalArticles.find("div.list-title a");
+      const $normalComments = $normalArticles.find("small.comment-count");
+      const $normalAuthors = $normalArticles.find("div.list-writer span");
+      const $normalDates = $normalArticles.find("div.list-time");
+
+      for (let i = 0; i < $normalTitles.length; i++) {
+        const title = $content($normalTitles[i]).attr("title");
+        const href = $content($normalTitles[i]).attr("href");
+        if (nomarlArticles.length >= count) break;
         else if (title && href) {
           nomarlArticles.push({
             articleTitle: title
@@ -194,13 +213,21 @@ class FanCafeParser {
               .trim()
               .replace(/ +/g, " "),
             url: `https://tgd.kr${href}`,
+            author: $content($normalAuthors[i]).text().trim(),
+            date: $content($normalDates[i]).text().trim(),
+            cmt: parseInt(
+              $content($normalComments[i])
+                .text()
+                .trim()
+                .replace(/(\[|\])/g, "")
+            ),
             isNotice: false,
           });
         }
-      });
+      }
 
       if (
-        (pageNum !== 1 && $normalArticleTitles.length !== 30) ||
+        (pageNum !== 1 && $normalTitles.length !== 30) ||
         nomarlArticles.length >= count
       )
         break;
