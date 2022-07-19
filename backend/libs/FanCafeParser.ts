@@ -13,6 +13,9 @@ type FanCafePlatforms = "naver-cafe" | "tgd";
 interface CafeArticle {
   articleTitle: string;
   url: string;
+  author: string;
+  date: string;
+  cmt: number;
   isNotice: boolean;
 }
 
@@ -76,36 +79,54 @@ class FanCafeParser {
         })
         .then((res) => iconv.decode(res.data, "EUC-KR"))
     );
-    const $noticeArticleList = $content(
-      "div.article-board div.inner_list a.article"
+
+    const $noticeArticles = $content("div#upperArticleList");
+    const $normalArticles = $content(
+      "div.article-board:not(#upperArticleList)"
     );
-    const $normalArticleList = $content(
-      "div.article-board:not(#upperArticleList) div.inner_list a.article"
-    );
+
     if (!skipNotice) {
-      $noticeArticleList.each((idx, ele) => {
+      const $noticeTitles = $noticeArticles.find("a.article");
+      const $noticeComments = $noticeArticles.find("a.cmt em");
+      const $noticeAuthors = $noticeArticles.find("td.p-nick");
+      const $noticeDates = $noticeArticles.find("td.td_date");
+
+      for (let i = 0; i < $noticeTitles.length; i++) {
         articles.push({
-          articleTitle: $content(ele)
+          articleTitle: $content($noticeTitles[i])
             .text()
             .replace(/(\n|\t)/g, "")
             .trim()
             .replace(/ +/g, " "),
-          url: `https://cafe.naver.com${$content(ele).attr("href")}`,
+          url: `https://cafe.naver.com${$content($noticeTitles[i]).attr(
+            "href"
+          )}`,
+          author: $content($noticeAuthors[i]).text(),
+          date: $content($noticeDates[i]).text(),
+          cmt: parseInt($content($noticeComments[i]).text()),
           isNotice: true,
         });
-      });
+      }
     }
-    $normalArticleList.each((idx, ele) => {
+    const $normalTitles = $normalArticles.find("a.article");
+    const $normalComments = $normalArticles.find("a.cmt em");
+    const $normalAuthors = $normalArticles.find("td.p-nick");
+    const $normalDates = $normalArticles.find("td.td_date");
+
+    for (let i = 0; i < $normalTitles.length; i++) {
       articles.push({
-        articleTitle: $content(ele)
+        articleTitle: $content($normalTitles[i])
           .text()
           .replace(/(\n|\t)/g, "")
           .trim()
           .replace(/ +/g, " "),
-        url: `https://cafe.naver.com${$content(ele).attr("href")}`,
+        url: `https://cafe.naver.com${$content($normalTitles[i]).attr("href")}`,
+        author: $content($normalAuthors[i]).text(),
+        date: $content($normalDates[i]).text(),
+        cmt: parseInt($content($normalComments[i]).text()),
         isNotice: false,
       });
-    });
+    }
 
     return {
       articles,
@@ -138,15 +159,15 @@ class FanCafeParser {
       const $content = $.load(
         await axios.default({ url, method: "GET" }).then((res) => res.data)
       );
-      const $noticeArticleList = $content(
+      const $noticeArticleTitles = $content(
         "div#article-list div.article-list-row.notice div.list-title a"
       );
-      const $normalArticleList = $content(
+      const $normalArticleTitles = $content(
         "div#article-list div.article-list-row:not(.notice) div.list-title a"
       );
 
       if (!skipNotice) {
-        $noticeArticleList.each((idx, ele) => {
+        $noticeArticleTitles.each((idx, ele) => {
           const title = $content(ele).attr("title");
           const href = $content(ele).attr("href");
           if (title && href) {
@@ -162,7 +183,7 @@ class FanCafeParser {
         });
       }
 
-      $normalArticleList.each((idx, ele) => {
+      $normalArticleTitles.each((idx, ele) => {
         const title = $content(ele).attr("title");
         const href = $content(ele).attr("href");
         if (nomarlArticles.length >= count) return;
@@ -179,7 +200,7 @@ class FanCafeParser {
       });
 
       if (
-        (pageNum !== 1 && $normalArticleList.length !== 30) ||
+        (pageNum !== 1 && $normalArticleTitles.length !== 30) ||
         nomarlArticles.length >= count
       )
         break;
