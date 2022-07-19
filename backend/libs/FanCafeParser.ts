@@ -92,6 +92,8 @@ class FanCafeParser {
       const $noticeDates = $noticeArticles.find("td.td_date");
 
       for (let i = 0; i < $noticeTitles.length; i++) {
+        let cmt = parseInt($content($noticeComments[i]).text());
+        if (!cmt) cmt = 0;
         articles.push({
           articleTitle: $content($noticeTitles[i])
             .text()
@@ -103,7 +105,7 @@ class FanCafeParser {
           )}`,
           author: $content($noticeAuthors[i]).text(),
           date: $content($noticeDates[i]).text(),
-          cmt: parseInt($content($noticeComments[i]).text()),
+          cmt,
           isNotice: true,
         });
       }
@@ -114,6 +116,8 @@ class FanCafeParser {
     const $normalDates = $normalArticles.find("td.td_date");
 
     for (let i = 0; i < $normalTitles.length; i++) {
+      let cmt = parseInt($content($normalComments[i]).text());
+      if (!cmt) cmt = 0;
       articles.push({
         articleTitle: $content($normalTitles[i])
           .text()
@@ -123,7 +127,7 @@ class FanCafeParser {
         url: `https://cafe.naver.com${$content($normalTitles[i]).attr("href")}`,
         author: $content($normalAuthors[i]).text(),
         date: $content($normalDates[i]).text(),
-        cmt: parseInt($content($normalComments[i]).text()),
+        cmt,
         isNotice: false,
       });
     }
@@ -176,6 +180,13 @@ class FanCafeParser {
         for (let i = 0; i < $noticeTitles.length; i++) {
           const title = $content($noticeTitles[i]).attr("title");
           const href = $content($noticeTitles[i]).attr("href");
+          let cmt = parseInt(
+            $content($noticeComments[i])
+              .text()
+              .trim()
+              .replace(/(\[|\])/g, "")
+          );
+          if (!cmt) cmt = 0;
           if (title && href) {
             noticeArticles.push({
               articleTitle: title
@@ -185,12 +196,7 @@ class FanCafeParser {
               url: `https://tgd.kr${href}`,
               author: $content($noticeAuthors[i]).text().trim(),
               date: $content($noticeDates[i]).text().trim(),
-              cmt: parseInt(
-                $content($noticeComments[i])
-                  .text()
-                  .trim()
-                  .replace(/(\[|\])/g, "")
-              ),
+              cmt,
               isNotice: true,
             });
           }
@@ -205,6 +211,13 @@ class FanCafeParser {
       for (let i = 0; i < $normalTitles.length; i++) {
         const title = $content($normalTitles[i]).attr("title");
         const href = $content($normalTitles[i]).attr("href");
+        let cmt = parseInt(
+          $content($normalComments[i])
+            .text()
+            .trim()
+            .replace(/(\[|\])/g, "")
+        );
+        if (!cmt) cmt = 0;
         if (nomarlArticles.length >= count) break;
         else if (title && href) {
           nomarlArticles.push({
@@ -215,12 +228,7 @@ class FanCafeParser {
             url: `https://tgd.kr${href}`,
             author: $content($normalAuthors[i]).text().trim(),
             date: $content($normalDates[i]).text().trim(),
-            cmt: parseInt(
-              $content($normalComments[i])
-                .text()
-                .trim()
-                .replace(/(\[|\])/g, "")
-            ),
+            cmt,
             isNotice: false,
           });
         }
