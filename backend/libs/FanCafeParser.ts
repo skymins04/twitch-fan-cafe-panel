@@ -17,6 +17,7 @@ interface CafeArticle {
   date: string;
   cmt: number;
   isNotice: boolean;
+  isOwner: boolean;
 }
 
 /**
@@ -90,6 +91,7 @@ class FanCafeParser {
       const $noticeComments = $noticeArticles.find("a.cmt em");
       const $noticeAuthors = $noticeArticles.find("td.p-nick");
       const $noticeDates = $noticeArticles.find("td.td_date");
+      const $noticeIsOwner = $noticeArticles.find("span.mem-level img");
 
       for (let i = 0; i < $noticeTitles.length; i++) {
         let cmt = parseInt($content($noticeComments[i]).text());
@@ -107,6 +109,11 @@ class FanCafeParser {
           date: $content($noticeDates[i]).text(),
           cmt,
           isNotice: true,
+          isOwner:
+            $content($noticeIsOwner[i]).attr("src") ===
+            "https://cafe.pstatic.net/levelicon/1/1_999.gif"
+              ? true
+              : false,
         });
       }
     }
@@ -114,6 +121,7 @@ class FanCafeParser {
     const $normalComments = $normalArticles.find("a.cmt em");
     const $normalAuthors = $normalArticles.find("td.p-nick");
     const $normalDates = $normalArticles.find("td.td_date");
+    const $normalIsOwner = $normalArticles.find("span.mem-level img");
 
     for (let i = 0; i < $normalTitles.length; i++) {
       let cmt = parseInt($content($normalComments[i]).text());
@@ -129,6 +137,11 @@ class FanCafeParser {
         date: $content($normalDates[i]).text(),
         cmt,
         isNotice: false,
+        isOwner:
+          $content($normalIsOwner[i]).attr("src") ===
+          "https://cafe.pstatic.net/levelicon/1/1_999.gif"
+            ? true
+            : false,
       });
     }
 
@@ -176,6 +189,7 @@ class FanCafeParser {
         const $noticeComments = $noticeArticles.find("small.comment-count");
         const $noticeAuthors = $noticeArticles.find("div.list-writer span");
         const $noticeDates = $noticeArticles.find("div.list-time");
+        const $noticeIsOwner = $noticeArticles.find("div.list-writer img");
 
         for (let i = 0; i < $noticeTitles.length; i++) {
           const title = $content($noticeTitles[i]).attr("title");
@@ -198,6 +212,10 @@ class FanCafeParser {
               date: $content($noticeDates[i]).text().trim(),
               cmt,
               isNotice: true,
+              isOwner:
+                $content($noticeIsOwner[i]).attr("title") === "Broadcaster"
+                  ? true
+                  : false,
             });
           }
         }
@@ -207,6 +225,7 @@ class FanCafeParser {
       const $normalComments = $normalArticles.find("small.comment-count");
       const $normalAuthors = $normalArticles.find("div.list-writer span");
       const $normalDates = $normalArticles.find("div.list-time");
+      const $normalIsOwner = $normalArticles.find("div.list-writer img");
 
       for (let i = 0; i < $normalTitles.length; i++) {
         const title = $content($normalTitles[i]).attr("title");
@@ -230,6 +249,10 @@ class FanCafeParser {
             date: $content($normalDates[i]).text().trim(),
             cmt,
             isNotice: false,
+            isOwner:
+              $content($normalIsOwner[i]).attr("title") === "Broadcaster"
+                ? true
+                : false,
           });
         }
       }
