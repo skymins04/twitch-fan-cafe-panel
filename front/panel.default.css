@@ -246,20 +246,11 @@ body,
 }
 
 .main .article .tab-viewport .tab-contents .tab-content .item {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: start;
-      -ms-flex-pack: start;
-          justify-content: flex-start;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
   position: relative;
   list-style: none;
   font-size: 14px;
   margin: 0 0.5em;
-  padding: 0.6em 0.5em 0.5em 2em;
+  padding: 0.6em 0.5em calc(0.7em + 10px) 2em;
   border-bottom: 1px solid var(--gray-color-1);
   background-color: white;
   -webkit-transition: 0.2s;
@@ -280,6 +271,29 @@ body,
 
 .main .article .tab-viewport .tab-contents .tab-content .item .dot {
   margin-right: 0.3em;
+}
+
+.main .article .tab-viewport .tab-contents .tab-content .item .meta {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 0.2em;
+  font-size: 10px;
+}
+
+.main .article .tab-viewport .tab-contents .tab-content .item .meta .icon {
+  display: inline-block;
+  margin-top: 1px;
+  margin-right: 5px;
+  width: 8px;
+  height: 8px;
+  fill: #666;
+}
+
+.main .article .tab-viewport .tab-contents .tab-content .item .meta > * {
+  float: right;
+  margin-left: 1em;
 }
 
 .main .article .tab-viewport .tab-contents .tab-content .item.item-notice {
