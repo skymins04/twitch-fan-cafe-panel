@@ -13,7 +13,11 @@ type FanCafePlatforms = "naver-cafe" | "tgd";
 interface CafeArticle {
   articleTitle: string;
   url: string;
+  author: string;
+  date: string;
+  cmt: number;
   isNotice: boolean;
+  isOwner: boolean;
 }
 
 /**
@@ -76,36 +80,70 @@ class FanCafeParser {
         })
         .then((res) => iconv.decode(res.data, "EUC-KR"))
     );
-    const $noticeArticleList = $content(
-      "div.article-board div.inner_list a.article"
+
+    const $noticeArticles = $content("div#upperArticleList");
+    const $normalArticles = $content(
+      "div.article-board:not(#upperArticleList)"
     );
-    const $normalArticleList = $content(
-      "div.article-board:not(#upperArticleList) div.inner_list a.article"
-    );
+
     if (!skipNotice) {
-      $noticeArticleList.each((idx, ele) => {
+      const $noticeTitles = $noticeArticles.find("a.article");
+      const $noticeComments = $noticeArticles.find("a.cmt em");
+      const $noticeAuthors = $noticeArticles.find("td.p-nick");
+      const $noticeDates = $noticeArticles.find("td.td_date");
+      const $noticeIsOwner = $noticeArticles.find("span.mem-level img");
+
+      for (let i = 0; i < $noticeTitles.length; i++) {
+        let cmt = parseInt($content($noticeComments[i]).text());
+        if (!cmt) cmt = 0;
         articles.push({
-          articleTitle: $content(ele)
+          articleTitle: $content($noticeTitles[i])
             .text()
             .replace(/(\n|\t)/g, "")
             .trim()
             .replace(/ +/g, " "),
-          url: `https://cafe.naver.com${$content(ele).attr("href")}`,
+          url: `https://cafe.naver.com${$content($noticeTitles[i]).attr(
+            "href"
+          )}`,
+          author: $content($noticeAuthors[i]).text(),
+          date: $content($noticeDates[i]).text(),
+          cmt,
           isNotice: true,
+          isOwner:
+            $content($noticeIsOwner[i]).attr("src") ===
+            "https://cafe.pstatic.net/levelicon/1/1_999.gif"
+              ? true
+              : false,
         });
-      });
+      }
     }
-    $normalArticleList.each((idx, ele) => {
+    const $normalTitles = $normalArticles.find("a.article");
+    const $normalComments = $normalArticles.find("a.cmt em");
+    const $normalAuthors = $normalArticles.find("td.p-nick");
+    const $normalDates = $normalArticles.find("td.td_date");
+    const $normalIsOwner = $normalArticles.find("span.mem-level img");
+
+    for (let i = 0; i < $normalTitles.length; i++) {
+      let cmt = parseInt($content($normalComments[i]).text());
+      if (!cmt) cmt = 0;
       articles.push({
-        articleTitle: $content(ele)
+        articleTitle: $content($normalTitles[i])
           .text()
           .replace(/(\n|\t)/g, "")
           .trim()
           .replace(/ +/g, " "),
-        url: `https://cafe.naver.com${$content(ele).attr("href")}`,
+        url: `https://cafe.naver.com${$content($normalTitles[i]).attr("href")}`,
+        author: $content($normalAuthors[i]).text(),
+        date: $content($normalDates[i]).text(),
+        cmt,
         isNotice: false,
+        isOwner:
+          $content($normalIsOwner[i]).attr("src") ===
+          "https://cafe.pstatic.net/levelicon/1/1_999.gif"
+            ? true
+            : false,
       });
-    });
+    }
 
     return {
       articles,
@@ -138,17 +176,31 @@ class FanCafeParser {
       const $content = $.load(
         await axios.default({ url, method: "GET" }).then((res) => res.data)
       );
-      const $noticeArticleList = $content(
-        "div#article-list div.article-list-row.notice div.list-title a"
+
+      const $noticeArticles = $content(
+        "div#article-list div.article-list-row.notice"
       );
-      const $normalArticleList = $content(
-        "div#article-list div.article-list-row:not(.notice) div.list-title a"
+      const $normalArticles = $content(
+        "div#article-list div.article-list-row:not(.notice)"
       );
 
       if (!skipNotice) {
-        $noticeArticleList.each((idx, ele) => {
-          const title = $content(ele).attr("title");
-          const href = $content(ele).attr("href");
+        const $noticeTitles = $noticeArticles.find("div.list-title a");
+        const $noticeComments = $noticeArticles.find("small.comment-count");
+        const $noticeAuthors = $noticeArticles.find("div.list-writer span");
+        const $noticeDates = $noticeArticles.find("div.list-time");
+        const $noticeIsOwner = $noticeArticles.find("div.list-writer img");
+
+        for (let i = 0; i < $noticeTitles.length; i++) {
+          const title = $content($noticeTitles[i]).attr("title");
+          const href = $content($noticeTitles[i]).attr("href");
+          let cmt = parseInt(
+            $content($noticeComments[i])
+              .text()
+              .trim()
+              .replace(/(\[|\])/g, "")
+          );
+          if (!cmt) cmt = 0;
           if (title && href) {
             noticeArticles.push({
               articleTitle: title
@@ -156,16 +208,36 @@ class FanCafeParser {
                 .trim()
                 .replace(/ +/g, " "),
               url: `https://tgd.kr${href}`,
+              author: $content($noticeAuthors[i]).text().trim(),
+              date: $content($noticeDates[i]).text().trim(),
+              cmt,
               isNotice: true,
+              isOwner:
+                $content($noticeIsOwner[i]).attr("title") === "Broadcaster"
+                  ? true
+                  : false,
             });
           }
-        });
+        }
       }
 
-      $normalArticleList.each((idx, ele) => {
-        const title = $content(ele).attr("title");
-        const href = $content(ele).attr("href");
-        if (nomarlArticles.length >= count) return;
+      const $normalTitles = $normalArticles.find("div.list-title a");
+      const $normalComments = $normalArticles.find("small.comment-count");
+      const $normalAuthors = $normalArticles.find("div.list-writer span");
+      const $normalDates = $normalArticles.find("div.list-time");
+      const $normalIsOwner = $normalArticles.find("div.list-writer img");
+
+      for (let i = 0; i < $normalTitles.length; i++) {
+        const title = $content($normalTitles[i]).attr("title");
+        const href = $content($normalTitles[i]).attr("href");
+        let cmt = parseInt(
+          $content($normalComments[i])
+            .text()
+            .trim()
+            .replace(/(\[|\])/g, "")
+        );
+        if (!cmt) cmt = 0;
+        if (nomarlArticles.length >= count) break;
         else if (title && href) {
           nomarlArticles.push({
             articleTitle: title
@@ -173,13 +245,20 @@ class FanCafeParser {
               .trim()
               .replace(/ +/g, " "),
             url: `https://tgd.kr${href}`,
+            author: $content($normalAuthors[i]).text().trim(),
+            date: $content($normalDates[i]).text().trim(),
+            cmt,
             isNotice: false,
+            isOwner:
+              $content($normalIsOwner[i]).attr("title") === "Broadcaster"
+                ? true
+                : false,
           });
         }
-      });
+      }
 
       if (
-        (pageNum !== 1 && $normalArticleList.length !== 30) ||
+        (pageNum !== 1 && $normalTitles.length !== 30) ||
         nomarlArticles.length >= count
       )
         break;
