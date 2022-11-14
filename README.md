@@ -9,3 +9,9 @@
 
 1. 네이버 카페 ([https://cafe.naver.com](https://cafe.naver.com))
 2. 트게더 ([https://tgd.kr](https://tgd.kr))
+
+## 실제 패널 적용 예시
+
+- 트위치 스트리머 ["포키쨩"](https://www.twitch.tv/pocky_chan8_8/about)님의 ["연중무휴포차 확장패널"](https://www.twitch.tv/popout/pocky_chan8_8/extensions/ehjriaina9qhedzhvzrhqg5sdvvesd/panel)
+
+![포키쨩 연중무휴포차 확장패널](/readme/readme_1.png)
